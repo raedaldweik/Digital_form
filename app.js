@@ -24,7 +24,7 @@
     document.querySelectorAll("[data-i18n-ph]").forEach(function (el) {
       el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph")));
     });
-    document.querySelectorAll(".lang-opt").forEach(function (b) {
+    document.querySelectorAll(".wlang").forEach(function (b) {
       b.classList.toggle("is-active", b.getAttribute("data-lang") === lang);
     });
   }

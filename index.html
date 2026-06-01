@@ -16,10 +16,14 @@
     <section class="screen screen-welcome is-active" id="screen-welcome">
       <div class="welcome-full">
         <img src="assets/welcome_full.jpeg" alt="Kuwait Smart Border Declaration — Welcome" class="welcome-img" />
-        <!-- transparent click-zones positioned over the painted controls -->
+        <!-- transparent click-zone over the painted Continue button -->
         <button class="hot hot-continue" data-goto="screen-step1" aria-label="Continue"></button>
-        <button class="hot hot-lang-en" data-lang="en" aria-label="English"></button>
-        <button class="hot hot-lang-ar" data-lang="ar" aria-label="العربية"></button>
+        <!-- real language toggle (image has this area cleared) -->
+        <div class="welcome-lang" role="group" aria-label="Language">
+          <button class="wlang is-active" data-lang="en"><span class="wlang-globe">🌐</span> English</button>
+          <span class="wlang-div"></span>
+          <button class="wlang" data-lang="ar">العربية</button>
+        </div>
       </div>
     </section>
 

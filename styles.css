@@ -87,9 +87,30 @@ body {
 }
 .hot:active { background: rgba(255,255,255,.14); }
 /* coordinates measured against welcome_full.jpeg (740 x 1600) */
-.hot-continue { left: 10%;   width: 80%;   top: 71.5%; height: 5.6%; }
-.hot-lang-en  { left: 23.5%; width: 27%;   top: 79.8%; height: 4.8%; }
-.hot-lang-ar  { left: 50.5%; width: 26.5%; top: 79.8%; height: 4.8%; }
+.hot-continue { left: 10%; width: 80%; top: 71.5%; height: 5.6%; }
+
+/* real language toggle, placed over the cleared area in the image */
+.welcome-lang {
+  position: absolute; left: 50%; top: 82.2%; transform: translate(-50%, -50%);
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(8, 18, 36, .45); border: 1px solid rgba(255,255,255,.30);
+  border-radius: 999px; padding: 6px; backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px); white-space: nowrap;
+}
+.wlang {
+  background: none; border: none; color: #fff; font-family: inherit;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  padding: 9px 20px; border-radius: 999px; opacity: .7;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: background .2s, box-shadow .2s, opacity .2s, color .2s;
+}
+.wlang-globe { font-size: 15px; }
+.wlang-div { width: 1px; height: 18px; background: rgba(255,255,255,.32); }
+.wlang.is-active {
+  opacity: 1; color: #ecfff3;
+  background: rgba(31, 154, 77, .28);
+  box-shadow: 0 0 18px rgba(52, 211, 120, .60), inset 0 0 0 1px rgba(120, 240, 168, .65);
+}
 
 /* ===== headings / progress ===== */
 .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
