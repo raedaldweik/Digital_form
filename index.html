@@ -27,253 +27,54 @@
       </div>
     </section>
 
-    <!-- ============ STEP 1 — TRAVELER INFO ============ -->
-    <section class="screen screen-form" id="screen-step1">
-      <header class="topbar">
-        <button class="iconbtn" data-goto="screen-welcome" aria-label="Back">‹</button>
-        <div class="topbar-brand">
-          <div class="brand-mark">🌐</div>
-          <div class="brand-text">
-            <span class="brand-ar">منصة التصريح الذكي للمنافذ الحدودية</span>
-            <span class="brand-en" data-i18n="brand">KUWAIT SMART BORDER DECLARATION</span>
-          </div>
-        </div>
-        <div class="brand-emblem">🛡️</div>
-      </header>
-
-      <div class="screen-scroll">
-        <div class="page-head">
-          <div>
-            <h2 class="page-title" data-i18n="step1.title">Traveler Information</h2>
-            <p class="page-sub" data-i18n="step1.sub">Please enter your personal information accurately</p>
-          </div>
-          <div class="step-badge"><span class="step-num">1</span> <span data-i18n="of">of</span> 3</div>
-        </div>
-        <div class="progress"><div class="progress-fill" style="width:33%"></div></div>
-
-        <div class="scan-card">
-          <button class="scan-opt" type="button">
-            <span class="scan-ic">📷</span>
-            <span class="scan-txt"><strong data-i18n="scan.passport">Scan Passport</strong><small data-i18n="scan.passportSub">Use camera to scan</small></span>
-          </button>
-          <span class="scan-divider"></span>
-          <button class="scan-opt" type="button">
-            <span class="scan-ic">📡</span>
-            <span class="scan-txt"><strong data-i18n="scan.nfc">Read Passport (NFC)</strong><small data-i18n="scan.nfcSub">Tap your passport</small></span>
-          </button>
-          <div class="scan-hint">✨ <span data-i18n="scan.hint">Auto-fill your information securely</span></div>
-        </div>
-
-        <form id="form-step1" class="form" novalidate>
-          <label class="field">
-            <span class="field-label" data-i18n="f.passport">Passport Number <i>*</i></span>
-            <span class="input-wrap">
-              <span class="input-ic">🪪</span>
-              <input type="text" name="passport" data-i18n-ph="f.passportPh" placeholder="Enter passport number" required />
-              <span class="input-ic input-ic--end">⛶</span>
-            </span>
-          </label>
-
-          <label class="field">
-            <span class="field-label" data-i18n="f.fullname">Full Name (as in Passport) <i>*</i></span>
-            <span class="input-wrap">
-              <span class="input-ic">👤</span>
-              <input type="text" name="fullname" data-i18n-ph="f.fullnamePh" placeholder="Enter full name" required />
-            </span>
-          </label>
-
-          <label class="field">
-            <span class="field-label" data-i18n="f.nationality">Nationality <i>*</i></span>
-            <span class="input-wrap">
-              <span class="input-ic">🏳️</span>
-              <select name="nationality" required>
-                <option value="" data-i18n="f.nationalityPh">Select nationality</option>
-              </select>
-              <span class="input-ic input-ic--end">⌄</span>
-            </span>
-          </label>
-
-          <label class="field">
-            <span class="field-label" data-i18n="f.dob">Date of Birth <i>*</i></span>
-            <span class="input-wrap">
-              <span class="input-ic">📅</span>
-              <input type="date" name="dob" required />
-            </span>
-          </label>
-
-          <div class="field">
-            <span class="field-label" data-i18n="f.mobile">Mobile Number <i>*</i></span>
-            <span class="input-wrap">
-              <span class="input-ic">📞</span>
-              <select name="dialcode" class="dialcode">
-                <option value="+965">+965</option>
-                <option value="+966">+966</option>
-                <option value="+971">+971</option>
-                <option value="+973">+973</option>
-                <option value="+974">+974</option>
-                <option value="+968">+968</option>
-                <option value="+964">+964</option>
-                <option value="+962">+962</option>
-                <option value="+20">+20</option>
-                <option value="+44">+44</option>
-                <option value="+1">+1</option>
-                <option value="+90">+90</option>
-                <option value="+91">+91</option>
-              </select>
-              <input type="tel" name="mobile" data-i18n-ph="f.mobilePh" placeholder="Enter mobile number" required />
-            </span>
-          </div>
-
-          <label class="field">
-            <span class="field-label" data-i18n="f.email">Email Address <i>*</i></span>
-            <span class="input-wrap">
-              <span class="input-ic">✉️</span>
-              <input type="email" name="email" data-i18n-ph="f.emailPh" placeholder="Enter email address" required />
-            </span>
-          </label>
-
-          <div class="notice">
-            <span class="notice-ic">🛡️</span>
-            <span data-i18n="step1.notice">Your information is encrypted and used only for border clearance purposes in accordance with Kuwait laws.</span>
-          </div>
-
-          <button class="btn btn-navy btn-block" type="submit">
-            <span data-i18n="continue">Continue</span><span class="btn-arrow">›</span>
-          </button>
-          <p class="trust">🔒 <span data-i18n="trust">Secure • Official • Trusted</span></p>
+    <!-- ============ STEP 1 — TRAVELER INFO (design image + fill-in fields) ============ -->
+    <section class="screen screen-img" id="screen-step1">
+      <div class="imgwrap">
+        <img class="designimg" src="assets/traveler_info.jpeg" alt="Traveler Information" />
+        <form id="form-step1" class="imgform" novalidate>
+          <!-- back -->
+          <button type="button" class="ovl ovl-hot" data-goto="screen-welcome" aria-label="Back" style="left:1.2%;top:5.3%;width:6.5%;height:2.9%"></button>
+          <!-- fill-in fields, positioned over the drawn input boxes -->
+          <input class="ovl ovl-input" type="text" name="passport" placeholder=" " autocomplete="off" required style="left:14.9%;top:36.5%;width:72%;height:3.6%" />
+          <input class="ovl ovl-input" type="text" name="fullname" placeholder=" " autocomplete="off" required style="left:14.9%;top:44.1%;width:78%;height:3.6%" />
+          <select class="ovl ovl-input ovl-select" name="nationality" required style="left:14.9%;top:51.7%;width:72%;height:3.6%">
+            <option value="">Select nationality</option>
+          </select>
+          <input class="ovl ovl-input" type="text" name="dob" inputmode="numeric" placeholder=" " autocomplete="off" required style="left:14.9%;top:59.2%;width:72%;height:3.6%" />
+          <input type="hidden" name="dialcode" value="+965" />
+          <input class="ovl ovl-input" type="tel" name="mobile" placeholder=" " autocomplete="off" required style="left:27%;top:66.7%;width:66%;height:3.6%" />
+          <input class="ovl ovl-input" type="email" name="email" placeholder=" " autocomplete="off" required style="left:14.9%;top:74.2%;width:78%;height:3.6%" />
+          <!-- continue -->
+          <button type="submit" class="ovl ovl-hot" aria-label="Continue" style="left:5.4%;top:87.3%;width:89.2%;height:4.6%"></button>
         </form>
       </div>
     </section>
 
-    <!-- ============ STEP 2 — TRAVEL DECLARATION ============ -->
-    <section class="screen screen-form" id="screen-step2">
-      <header class="topbar">
-        <button class="iconbtn" data-goto="screen-step1" aria-label="Back">‹</button>
-        <div class="topbar-brand">
-          <div class="brand-mark">🌐</div>
-          <div class="brand-text">
-            <span class="brand-ar">منصة التصريح الذكي للمنافذ الحدودية</span>
-            <span class="brand-en" data-i18n="brand">KUWAIT SMART BORDER DECLARATION</span>
-          </div>
-        </div>
-        <div class="brand-emblem">🛡️</div>
-      </header>
+    <!-- ============ STEP 2 — TRAVEL DECLARATION (design image + fill-in fields) ============ -->
+    <section class="screen screen-img" id="screen-step2">
+      <div class="imgwrap">
+        <img class="designimg" src="assets/decleration.jpeg" alt="Travel Declaration" />
+        <form id="form-step2" class="imgform" novalidate>
+          <!-- back -->
+          <button type="button" class="ovl ovl-hot" data-goto="screen-step1" aria-label="Back" style="left:1.2%;top:5.3%;width:6.5%;height:2.9%"></button>
+          <!-- functional country of departure (over the drawn dropdown) -->
+          <select id="departure" name="departure" class="ovl ovl-input ovl-select" style="left:25.7%;top:33%;width:62%;height:3.4%"></select>
+          <!-- functional cash amount -->
+          <input type="number" name="cash" min="0" step="any" placeholder=" " class="ovl ovl-input" style="left:18.2%;top:65.6%;width:65%;height:3.5%" />
+          <!-- submit -->
+          <button type="submit" class="ovl ovl-hot" aria-label="Submit Declaration" style="left:5.4%;top:87.2%;width:89.2%;height:4.7%"></button>
 
-      <div class="screen-scroll">
-        <div class="page-head">
-          <div>
-            <h2 class="page-title" data-i18n="step2.title">Travel Declaration</h2>
-            <p class="page-sub" data-i18n="step2.sub">Please provide your travel details</p>
+          <!-- hidden controls feeding the decision engine to match the values shown in the design -->
+          <input type="hidden" name="purpose" value="Tourism" />
+          <input type="hidden" name="duration" value="8-30" />
+          <div id="prev-tags" hidden></div>
+          <select id="prev-select" hidden><option value=""></option></select>
+          <div id="items" hidden>
+            <label><input type="checkbox" name="items" value="None" data-none checked /></label>
           </div>
-          <div class="step-badge"><span class="step-num">2</span> <span data-i18n="of">of</span> 3</div>
-        </div>
-        <div class="progress"><div class="progress-fill" style="width:66%"></div></div>
-
-        <form id="form-step2" class="form" novalidate>
-          <!-- 1. Purpose -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">💼</span><h3 data-i18n="q1.title">1. Purpose of Visit <i>*</i></h3></div>
-            <div class="chip-grid" data-single role="radiogroup">
-              <button type="button" class="chip is-active" data-value="Tourism"><span class="chip-ic">🧳</span><span data-i18n="q1.tourism">Tourism</span></button>
-              <button type="button" class="chip" data-value="Business"><span class="chip-ic">💼</span><span data-i18n="q1.business">Business</span></button>
-              <button type="button" class="chip" data-value="Family"><span class="chip-ic">👪</span><span data-i18n="q1.family">Family Visit</span></button>
-              <button type="button" class="chip" data-value="Medical"><span class="chip-ic">❤️</span><span data-i18n="q1.medical">Medical</span></button>
-              <button type="button" class="chip" data-value="Transit"><span class="chip-ic">✈️</span><span data-i18n="q1.transit">Transit</span></button>
-            </div>
-            <input type="hidden" name="purpose" value="Tourism" />
-          </div>
-
-          <!-- 2. Country of departure -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">📍</span><h3 data-i18n="q2.title">2. Country of Departure <i>*</i></h3></div>
-            <span class="input-wrap">
-              <select name="departure" id="departure" required>
-                <option value="" data-i18n="q2.ph">Select country</option>
-              </select>
-              <span class="input-ic input-ic--end">⌄</span>
-            </span>
-          </div>
-
-          <!-- 3. Previous countries -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">🌐</span><h3 data-i18n="q3.title">3. Previous Countries Visited (Last 3 Years)</h3></div>
-            <div class="tags" id="prev-tags"></div>
-            <span class="input-wrap">
-              <select id="prev-select">
-                <option value="" data-i18n="q3.ph">Add a country</option>
-              </select>
-              <span class="input-ic input-ic--end">⌄</span>
-            </span>
-          </div>
-
-          <!-- 4. Duration -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">📆</span><h3 data-i18n="q4.title">4. Expected Duration of Stay <i>*</i></h3></div>
-            <div class="chip-grid chip-grid--3" data-single role="radiogroup">
-              <button type="button" class="chip" data-value="1-7"><span class="chip-ic">📅</span><span data-i18n="q4.short">1 - 7 Days</span></button>
-              <button type="button" class="chip is-active" data-value="8-30"><span class="chip-ic">📅</span><span data-i18n="q4.mid">8 - 30 Days</span></button>
-              <button type="button" class="chip" data-value="30+"><span class="chip-ic">📅</span><span data-i18n="q4.long">30+ Days</span></button>
-            </div>
-            <input type="hidden" name="duration" value="8-30" />
-          </div>
-
-          <!-- 5. Items to declare -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">🧳</span><h3 data-i18n="q5.title">5. Items to Declare</h3><span class="info">ⓘ</span></div>
-            <div class="check-row" id="items">
-              <label class="check"><input type="checkbox" name="items" value="Currency" /><span data-i18n="q5.currency">Currency</span></label>
-              <label class="check"><input type="checkbox" name="items" value="Electronics" /><span data-i18n="q5.electronics">Electronics</span></label>
-              <label class="check"><input type="checkbox" name="items" value="Medication" /><span data-i18n="q5.medication">Medication</span></label>
-              <label class="check"><input type="checkbox" name="items" value="Commercial" /><span data-i18n="q5.commercial">Commercial Goods</span></label>
-              <label class="check"><input type="checkbox" name="items" value="None" data-none checked /><span data-i18n="q5.none">None</span></label>
-            </div>
-          </div>
-
-          <!-- 6. Cash -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">💵</span><h3 data-i18n="q6.title">6. Cash Declaration</h3><span class="info">ⓘ</span></div>
-            <p class="card-note" data-i18n="q6.note">Amount of cash you are carrying (KWD)</p>
-            <span class="input-wrap">
-              <input type="number" name="cash" min="0" step="any" data-i18n-ph="q6.ph" placeholder="Enter amount" />
-              <span class="input-ic input-ic--end input-suffix">KWD</span>
-            </span>
-          </div>
-
-          <!-- 7. Customs -->
-          <div class="card">
-            <div class="card-head"><span class="card-ic">📋</span><h3 data-i18n="q7.title">7. Customs Declaration Questions</h3><span class="info">ⓘ</span></div>
-            <div class="yesno-row">
-              <span data-i18n="q7.q1">Are you carrying any restricted or prohibited goods?</span>
-              <div class="yesno" data-name="restricted">
-                <button type="button" class="yn is-active" data-value="No" data-i18n="no">No</button>
-                <button type="button" class="yn" data-value="Yes" data-i18n="yes">Yes</button>
-              </div>
-            </div>
-            <div class="yesno-row">
-              <span data-i18n="q7.q2">Are you carrying commercial merchandise?</span>
-              <div class="yesno" data-name="merchandise">
-                <button type="button" class="yn is-active" data-value="No" data-i18n="no">No</button>
-                <button type="button" class="yn" data-value="Yes" data-i18n="yes">Yes</button>
-              </div>
-            </div>
-            <div class="yesno-row">
-              <span data-i18n="q7.q3">Are you carrying cash or monetary instruments exceeding KWD 10,000?</span>
-              <div class="yesno" data-name="largecash">
-                <button type="button" class="yn is-active" data-value="No" data-i18n="no">No</button>
-                <button type="button" class="yn" data-value="Yes" data-i18n="yes">Yes</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="notice">
-            <span class="notice-ic">🛡️</span>
-            <span data-i18n="step2.notice">All information is secure and will be used only for border clearance purposes</span>
-            <span class="notice-lock">🔒</span>
-          </div>
-
-          <button class="btn btn-green btn-block" type="submit">
-            <span data-i18n="submit">Submit Declaration</span><span class="btn-arrow">›</span>
-          </button>
+          <div class="yesno" data-name="restricted" hidden><button type="button" class="yn is-active" data-value="No"></button><button type="button" class="yn" data-value="Yes"></button></div>
+          <div class="yesno" data-name="merchandise" hidden><button type="button" class="yn is-active" data-value="No"></button><button type="button" class="yn" data-value="Yes"></button></div>
+          <div class="yesno" data-name="largecash" hidden><button type="button" class="yn is-active" data-value="No"></button><button type="button" class="yn" data-value="Yes"></button></div>
         </form>
       </div>
     </section>

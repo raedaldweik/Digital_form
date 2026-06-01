@@ -42,10 +42,10 @@
     document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("is-active"); });
     var el = document.getElementById(id);
     if (el) { el.classList.add("is-active"); }
-    // welcome screen is a full-bleed image with no bottom nav
-    var isWelcome = id === "screen-welcome";
-    document.getElementById("bottomnav").style.display = isWelcome ? "none" : "flex";
-    document.getElementById("app").classList.toggle("no-nav", isWelcome);
+    // full-image screens (welcome + design pages) are full-bleed with no bottom nav
+    var noChrome = id === "screen-welcome" || (el && el.classList.contains("screen-img"));
+    document.getElementById("bottomnav").style.display = noChrome ? "none" : "flex";
+    document.getElementById("app").classList.toggle("no-nav", noChrome);
     document.querySelectorAll(".nav-item").forEach(function (n) { n.classList.remove("is-active"); });
     var homeNav = document.querySelector('.nav-item[data-goto="screen-welcome"]');
     if (id === "screen-welcome" && homeNav) homeNav.classList.add("is-active");

@@ -284,3 +284,25 @@ body {
 [dir="rtl"] .btn-arrow { transform: scaleX(-1); }
 [dir="rtl"] .iconbtn { transform: scaleX(-1); }
 [dir="rtl"] .welcome-title, [dir="rtl"] .page-title { letter-spacing: 0; }
+
+/* ===== full-image design pages (Step 1 & Step 2) — isolated, do not affect other screens ===== */
+.screen-img { background: #fdfdfd; min-height: 100vh; }
+.imgwrap { position: relative; width: 100%; container-type: inline-size; }
+.designimg { display: block; width: 100%; height: auto; }
+.imgform { position: absolute; inset: 0; margin: 0; }
+.ovl { position: absolute; box-sizing: border-box; }
+.ovl-input {
+  border: none; outline: none; background: transparent;
+  font-family: inherit; font-size: 3.7cqw; color: var(--ink);
+  padding: 0 2px; border-radius: 7px; line-height: 1.1;
+}
+.ovl-input::placeholder { color: transparent; }
+/* hide the drawn placeholder cleanly the moment the field has focus or text */
+.ovl-input:focus, .ovl-input:not(:placeholder-shown) { background: #fff; }
+.ovl-select { appearance: none; -webkit-appearance: none; background: #fff; cursor: pointer; }
+.ovl-select:required:invalid { color: #9aa5b3; }
+.ovl-hot {
+  background: transparent; border: none; cursor: pointer; padding: 0;
+  border-radius: 14px; -webkit-tap-highlight-color: transparent;
+}
+.ovl-hot:active { background: rgba(0,0,0,.06); }
