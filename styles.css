@@ -82,43 +82,26 @@ body {
   overflow: hidden;
 }
 
-/* ----- cinematic dusk scene ----- */
+/* ----- official hero photo (logos + skyline + gate baked in) ----- */
 .welcome-scene { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.scene-sky {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    #d2b3c8 0%, #b694af 13%, #8d7ba6 25%, #5d6493 38%,
-    #36436f 50%, #1c2c50 64%, #0f1f3c 78%, #0c1c36 100%);
-}
-.scene-glow {
-  position: absolute; top: -8%; left: 50%; transform: translateX(-50%);
-  width: 520px; height: 360px;
-  background: radial-gradient(closest-side, rgba(255,196,150,.45), rgba(255,170,140,.12) 55%, transparent 75%);
-}
-/* real photo (drops in over the CSS scene; CSS scene is the fallback) */
+/* fit to width, pinned to top, so all three logos stay fully visible */
 .scene-photo {
-  position: absolute; inset: 0;
-  background-image: url('assets/welcome-bg.jpg');
-  background-size: cover;
-  background-position: center top;
+  position: absolute; left: 0; right: 0; top: 0;
+  background-image: url('assets/welcome_bg.png');
+  background-size: 100% auto;
+  background-position: top center;
   background-repeat: no-repeat;
+  height: 100%;
 }
-.scene-net { position: absolute; top: 0; left: 0; width: 100%; height: 46%; }
-.scene-skyline { position: absolute; left: 0; right: 0; top: 30%; width: 100%; height: 42%; }
+/* blend the photo's lower edge seamlessly into the navy content area */
 .scene-fade {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 62%;
-  background: linear-gradient(180deg, rgba(12,28,54,0) 0%, rgba(12,28,54,.55) 40%, #0c1c36 82%);
+  position: absolute; left: 0; right: 0; bottom: 0; height: 70%;
+  background: linear-gradient(180deg,
+    rgba(12,28,54,0) 0%, rgba(12,28,54,0) 34%,
+    rgba(12,28,54,.85) 50%, #0c1c36 64%, #0c1c36 100%);
 }
-/* lift all real content above the scene */
-.welcome-emblems, .welcome-body { position: relative; z-index: 1; }
-.welcome-emblems {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  text-align: center; margin-bottom: 8px;
-}
-.emblem { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8px; font-weight: 700; letter-spacing: .3px; max-width: 78px; text-shadow: 0 1px 6px rgba(0,0,0,.45); }
-.emblem-icon { font-size: 26px; }
-.emblem-divider { width: 1px; height: 34px; background: rgba(255,255,255,.25); }
-.welcome-body { margin-top: auto; text-align: center; display: flex; flex-direction: column; align-items: center; }
+/* lift content above the scene */
+.welcome-body { position: relative; z-index: 1; margin-top: auto; text-align: center; display: flex; flex-direction: column; align-items: center; }
 .welcome-title { font-size: 38px; line-height: 1.05; font-weight: 800; margin: 0 0 10px; letter-spacing: -.5px; }
 .welcome-title-ar { color: #6fe39a; font-size: 22px; font-weight: 700; margin: 0 0 16px; }
 .welcome-shield { font-size: 22px; opacity: .85; margin-bottom: 14px; }

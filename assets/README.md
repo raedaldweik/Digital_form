@@ -1,9 +1,9 @@
 # assets
 
-Place the welcome background image here, named **exactly**:
+The welcome background image lives here, named **exactly**:
 
 ```
-welcome-bg.jpg
+welcome_bg.png
 ```
 
 It's used as the full-bleed background of the welcome/login screen
