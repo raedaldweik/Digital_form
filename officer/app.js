@@ -166,9 +166,6 @@
       ? '<div class="reco"><span class="ric">' + flagIc.replace('12" height="12"', '20" height="20"').replace('stroke-width="2"', 'stroke="#df3a2f" stroke-width="2"') + '</span><div><b>Requires additional investigation</b><p>SAS Visual Investigator recommends a secondary inspection before clearance.</p></div></div>'
       : '<div class="reco clear"><span class="ric"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#0a9d57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Eligible for clearance</b><p>No high-risk indicators detected. Standard processing recommended.</p></div></div>';
 
-    var insV = t.insuranceExpired
-      ? '<span class="pill-bad">EXPIRED · ' + fmt(t.insuranceExpiry) + '</span>'
-      : '<span class="pill-ok">VALID · ' + fmt(t.insuranceExpiry) + '</span>';
     var dualV = t.dualUse
       ? '<span class="pill-bad">DETECTED</span>'
       : '<span class="pill-ok">NONE</span>';
@@ -181,13 +178,21 @@
 
       reco +
 
-      '<div class="info-card glass"><h4>Key Indicators</h4>' +
+      '<div class="info-card glass"><h4>KEY INDICATORS</h4>' +
         kv(ICN.box, "Dual-use products", dualV) +
         (t.dualUse ? '<div class="kv"><span class="k" style="padding-left:43px">Item</span><span class="v" style="font-weight:600">' + t.dualUse + '</span></div>' : '') +
-        kv(ICN.shield, "Insurance expiry", insV) +
-        kv(ICN.car, "Vehicle number", t.plate) +
-        kv(ICN.doc, "Declaration code", t.decl + (t.declMatch ? '' : ' <span class="pill-bad" style="margin-left:6px">MISMATCH</span>')) +
-        kv(ICN.user, "Person history", (t.incidents > 0 ? '<span class="v red">' + t.incidents + ' incident' + (t.incidents > 1 ? 's' : '') + '</span>' : '<span class="v green">Clean</span>')) +
+        '<div class="kv"><span class="k"><span class="kic">' + ICN.shield + '</span>Insurance expiry</span><span class="v-stack">' +
+          '<span class="v ' + (t.insuranceExpired ? 'red' : 'green') + '">' + fmt(t.insuranceExpiry) + '</span>' +
+          (t.insuranceExpired ? '<span class="pill-bad">EXPIRED</span>' : '<span class="pill-ok">VALID</span>') +
+        '</span></div>' +
+        kv(ICN.car, "Vehicle number", '<span class="v">' + t.plate + '</span>') +
+        '<div class="kv"><span class="k"><span class="kic">' + ICN.doc + '</span>Declaration code</span><span class="v-stack">' +
+          '<span class="v">' + t.decl + '</span>' +
+          (t.declMatch ? '<span class="pill-ok">MATCH</span>' : '<span class="pill-bad">MISMATCH</span>') +
+        '</span></div>' +
+        '<div class="kv"><span class="k"><span class="kic">' + ICN.user + '</span>Person history</span>' +
+          (t.incidents > 0 ? '<span class="v red">' + t.incidents + ' incident' + (t.incidents > 1 ? 's' : '') + '</span>' : '<span class="v green">Clean</span>') +
+        '</div>' +
       '</div>' +
 
       '<div class="info-card glass"><h4>Risk Score Breakdown</h4>' +
@@ -238,6 +243,9 @@
     var bar = document.getElementById("tabbar");
     var hideBar = id === "screen-task";
     bar.classList.toggle("hidden", hideBar);
+    // white status-bar text only over the dark home hero
+    var sb = document.querySelector(".statusbar");
+    if (sb) sb.classList.toggle("sb-light", id === "screen-home");
     document.querySelectorAll(".tab").forEach(function (b) {
       b.classList.toggle("is-active", b.getAttribute("data-tab") === id);
     });
