@@ -29,8 +29,12 @@
     });
   }
 
-  document.querySelectorAll(".lang-opt").forEach(function (btn) {
-    btn.addEventListener("click", function () { lang = btn.getAttribute("data-lang"); applyLang(); });
+  // language can be set from the welcome hotspots or any [data-lang] control
+  document.addEventListener("click", function (e) {
+    var lb = e.target.closest("[data-lang]");
+    if (!lb) return;
+    lang = lb.getAttribute("data-lang");
+    applyLang();
   });
 
   /* ---------- navigation ---------- */
@@ -38,8 +42,10 @@
     document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("is-active"); });
     var el = document.getElementById(id);
     if (el) { el.classList.add("is-active"); }
-    var onResult = id === "screen-result";
-    document.getElementById("bottomnav").style.display = onResult ? "flex" : "flex";
+    // welcome screen is a full-bleed image with no bottom nav
+    var isWelcome = id === "screen-welcome";
+    document.getElementById("bottomnav").style.display = isWelcome ? "none" : "flex";
+    document.getElementById("app").classList.toggle("no-nav", isWelcome);
     document.querySelectorAll(".nav-item").forEach(function (n) { n.classList.remove("is-active"); });
     var homeNav = document.querySelector('.nav-item[data-goto="screen-welcome"]');
     if (id === "screen-welcome" && homeNav) homeNav.classList.add("is-active");
