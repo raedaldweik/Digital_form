@@ -20,6 +20,10 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+
+/* hide scrollbars everywhere but keep scrolling */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { width: 0; height: 0; display: none; }
 body {
   font-family: var(--font);
   color: var(--ink);
@@ -71,19 +75,39 @@ body {
 .brand-emblem { font-size: 22px; }
 
 /* ===== WELCOME ===== */
-.screen-welcome { background: var(--navy); }
+.screen-welcome { background: #0c1c36; }
 .welcome-hero {
-  flex: 1; display: flex; flex-direction: column;
-  background:
-    linear-gradient(180deg, rgba(15,36,68,.2) 0%, rgba(15,36,68,.65) 45%, #0c1c36 100%),
-    radial-gradient(120% 70% at 50% 0%, #2a4f86 0%, #16315a 40%, #0c1c36 100%);
-  color: #fff; padding: 26px 22px 30px; min-height: 100vh;
+  flex: 1; display: flex; flex-direction: column; position: relative;
+  background: #0c1c36; color: #fff; padding: 26px 22px 30px; min-height: 100vh;
+  overflow: hidden;
 }
+
+/* ----- cinematic dusk scene ----- */
+.welcome-scene { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.scene-sky {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    #d2b3c8 0%, #b694af 13%, #8d7ba6 25%, #5d6493 38%,
+    #36436f 50%, #1c2c50 64%, #0f1f3c 78%, #0c1c36 100%);
+}
+.scene-glow {
+  position: absolute; top: -8%; left: 50%; transform: translateX(-50%);
+  width: 520px; height: 360px;
+  background: radial-gradient(closest-side, rgba(255,196,150,.45), rgba(255,170,140,.12) 55%, transparent 75%);
+}
+.scene-net { position: absolute; top: 0; left: 0; width: 100%; height: 46%; }
+.scene-skyline { position: absolute; left: 0; right: 0; top: 30%; width: 100%; height: 42%; }
+.scene-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 62%;
+  background: linear-gradient(180deg, rgba(12,28,54,0) 0%, rgba(12,28,54,.55) 40%, #0c1c36 82%);
+}
+/* lift all real content above the scene */
+.welcome-emblems, .welcome-body { position: relative; z-index: 1; }
 .welcome-emblems {
   display: flex; align-items: center; justify-content: center; gap: 10px;
   text-align: center; margin-bottom: 8px;
 }
-.emblem { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8px; font-weight: 700; letter-spacing: .3px; max-width: 78px; }
+.emblem { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8px; font-weight: 700; letter-spacing: .3px; max-width: 78px; text-shadow: 0 1px 6px rgba(0,0,0,.45); }
 .emblem-icon { font-size: 26px; }
 .emblem-divider { width: 1px; height: 34px; background: rgba(255,255,255,.25); }
 .welcome-body { margin-top: auto; text-align: center; display: flex; flex-direction: column; align-items: center; }
