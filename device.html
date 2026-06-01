@@ -3,38 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kuwait Smart Border Declaration — Device Preview</title>
+  <title>Kuwait Smart Border Declaration</title>
   <style>
     :root { --bezel: #0a0a0c; }
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; }
     body {
       min-height: 100vh;
-      background: #1b1f27 radial-gradient(1000px 600px at 50% -5%, #2a3140, #14171d);
-      color: #e7ecf3;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-      display: flex; flex-direction: column; align-items: center;
-      padding: 34px 16px 48px; gap: 22px;
+      background: #14171d;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
     }
-    .head { text-align: center; }
-    .head h1 { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
-    .head p { margin: 0; font-size: 13px; color: #9aa6b6; }
 
-    .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-    .controls button {
-      background: #232a35; color: #cdd6e3; border: 1px solid #333d4c;
-      border-radius: 999px; padding: 8px 16px; font: inherit; font-size: 13px;
-      font-weight: 600; cursor: pointer; transition: all .15s;
-    }
-    .controls button:hover { background: #2c3543; }
-    .controls button.is-active { background: #1f9a4d; border-color: #1f9a4d; color: #fff; }
+    /* wrapper gets scaled by JS so the phone always fits the viewport */
+    .stage { transform-origin: center center; }
 
-    /* ===== iPhone frame ===== */
-    .device-stage { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; justify-content: center; }
+    /* ===== iPhone 17 frame ===== */
     .phone {
       position: relative;
-      width: var(--w, 393px);
-      height: var(--h, 852px);
+      width: 393px;
+      height: 852px;
       background: var(--bezel);
       border-radius: 58px;
       padding: 14px;
@@ -43,8 +31,6 @@
         0 0 0 6px #0a0a0c,
         0 40px 80px rgba(0,0,0,.55),
         inset 0 0 4px rgba(255,255,255,.08);
-      flex: none;
-      transition: width .25s, height .25s;
     }
     .phone__screen {
       position: relative;
@@ -57,39 +43,22 @@
       width: 100%; height: 100%; border: 0; display: block;
       background: #eef1f5;
     }
-    /* Dynamic Island */
     .phone__island {
       position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
       width: 112px; height: 33px; background: #000; border-radius: 20px; z-index: 10;
       pointer-events: none;
     }
-    /* side buttons */
-    .phone::before, .phone::after {
-      content: ""; position: absolute; left: -3px; width: 3px; border-radius: 3px 0 0 3px; background: #15171b;
+    .phone::before {
+      content: ""; position: absolute; left: -3px; top: 130px; width: 3px; height: 32px;
+      border-radius: 3px 0 0 3px; background: #15171b;
+      box-shadow: 0 50px 0 #15171b, 0 110px 0 #15171b;
     }
-    .phone::before { top: 130px; height: 32px; box-shadow: 0 50px 0 #15171b, 0 110px 0 #15171b; }
     .phone__power { position: absolute; right: -3px; top: 170px; width: 3px; height: 90px; background: #15171b; border-radius: 0 3px 3px 0; }
-
-    .hint { font-size: 12.5px; color: #8d99a9; max-width: 460px; text-align: center; line-height: 1.6; }
-    .hint code { background: #232a35; padding: 2px 6px; border-radius: 5px; color: #cfd8e4; }
-    a.openlink { color: #6fe39a; text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>
-  <div class="head">
-    <h1>📱 Device Preview</h1>
-    <p>Kuwait Smart Border Declaration, shown at real phone dimensions</p>
-  </div>
-
-  <div class="controls" id="controls">
-    <button data-w="393" data-h="852" class="is-active">iPhone 17 / 16 / 15</button>
-    <button data-w="430" data-h="932">iPhone 17 Pro Max</button>
-    <button data-w="375" data-h="812">iPhone SE / mini</button>
-    <button data-w="360" data-h="800">Android (Pixel)</button>
-  </div>
-
-  <div class="device-stage">
-    <div class="phone" id="phone">
+  <div class="stage" id="stage">
+    <div class="phone">
       <span class="phone__power"></span>
       <div class="phone__screen">
         <div class="phone__island"></div>
@@ -98,21 +67,19 @@
     </div>
   </div>
 
-  <p class="hint">
-    Tip: this is just a visual frame around the real site (<code>index.html</code>).
-    Open <a class="openlink" href="index.html" target="_blank">the form full-screen</a> to interact normally,
-    or use your browser's device toolbar (<code>Cmd/Ctrl + Shift + M</code>) for built-in device emulation.
-  </p>
-
   <script>
-    var phone = document.getElementById('phone');
-    document.getElementById('controls').addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return;
-      document.querySelectorAll('#controls button').forEach(function (x) { x.classList.remove('is-active'); });
-      b.classList.add('is-active');
-      phone.style.setProperty('--w', b.dataset.w + 'px');
-      phone.style.setProperty('--h', b.dataset.h + 'px');
-    });
+    var stage = document.getElementById('stage');
+    function fit() {
+      // phone outer box is ~393x852; leave a little breathing room
+      var scale = Math.min(
+        (window.innerWidth  - 40) / 405,
+        (window.innerHeight - 40) / 864,
+        1
+      );
+      stage.style.transform = 'scale(' + scale + ')';
+    }
+    window.addEventListener('resize', fit);
+    fit();
   </script>
 </body>
 </html>
