@@ -291,6 +291,12 @@ body {
 .ovl-input:focus, .ovl-input:not(:placeholder-shown) { background: #fff; }
 .ovl-select { appearance: none; -webkit-appearance: none; background: #fff; cursor: pointer; }
 .ovl-select:required:invalid { color: #9aa5b3; }
+/* date field: white fill, drawn calendar icons stay (native indicator hidden), whole field opens the picker */
+.ovl-date { background: #fff; color: var(--ink); cursor: pointer; }
+.ovl-date::-webkit-calendar-picker-indicator { opacity: 0; cursor: pointer; }
+.ovl-date:invalid { color: #9aa5b3; }
+/* make sure hidden helper controls never render over the design image */
+.screen-img [hidden] { display: none !important; }
 .ovl-hot {
   background: transparent; border: none; cursor: pointer; padding: 0;
   border-radius: 14px; -webkit-tap-highlight-color: transparent;
