@@ -65,7 +65,7 @@
   ];
 
   function levelOf(score) { return score >= 70 ? "High" : score >= 40 ? "Medium" : "Low"; }
-  function colorOf(level) { return level === "High" ? "#ff453a" : level === "Medium" ? "#ffd60a" : "#30d158"; }
+  function colorOf(level) { return level === "High" ? "#df3a2f" : level === "Medium" ? "#d9870a" : "#0a9d57"; }
 
   /* progress ring as SVG string */
   function ring(score, size) {
@@ -80,7 +80,7 @@
       : '<span class="score">' + score + '</span>';
     return '<div class="ring" style="width:' + size + 'px;height:' + size + 'px">' +
       '<svg width="' + size + '" height="' + size + '">' +
-      '<circle cx="' + cx + '" cy="' + cx + '" r="' + r + '" stroke="rgba(255,255,255,.1)" stroke-width="' + stroke + '" fill="none"/>' +
+      '<circle cx="' + cx + '" cy="' + cx + '" r="' + r + '" stroke="rgba(20,40,80,.10)" stroke-width="' + stroke + '" fill="none"/>' +
       '<circle cx="' + cx + '" cy="' + cx + '" r="' + r + '" stroke="' + col + '" stroke-width="' + stroke + '" fill="none" ' +
       'stroke-linecap="round" stroke-dasharray="' + c + '" stroke-dashoffset="' + off + '" style="filter:drop-shadow(0 0 6px ' + col + '88)"/>' +
       '</svg>' + inner + '</div>';
@@ -141,7 +141,7 @@
   }
 
   function factorBar(name, weight, active) {
-    var col = active ? (weight >= 25 ? "#ff453a" : "#ffd60a") : "#30d158";
+    var col = active ? (weight >= 25 ? "#df3a2f" : "#d9870a") : "#0a9d57";
     return '<div class="factor"><div class="factor-h"><span class="fn">' + name + '</span>' +
       '<span class="fw" style="color:' + col + '">+' + (active ? weight : 0) + '</span></div>' +
       '<div class="bar"><i style="width:' + (active ? Math.min(100, weight * 3) : 6) + '%;background:' + col + '"></i></div></div>';
@@ -163,8 +163,8 @@
 
     var flagged = lvl === "High" || t.dualUse || t.insuranceExpired;
     var reco = flagged
-      ? '<div class="reco"><span class="ric">' + flagIc.replace('12" height="12"', '20" height="20"').replace('stroke-width="2"', 'stroke="#ff8077" stroke-width="2"') + '</span><div><b>Requires additional investigation</b><p>SAS Visual Investigator recommends a secondary inspection before clearance.</p></div></div>'
-      : '<div class="reco clear"><span class="ric"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5be584" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Eligible for clearance</b><p>No high-risk indicators detected. Standard processing recommended.</p></div></div>';
+      ? '<div class="reco"><span class="ric">' + flagIc.replace('12" height="12"', '20" height="20"').replace('stroke-width="2"', 'stroke="#df3a2f" stroke-width="2"') + '</span><div><b>Requires additional investigation</b><p>SAS Visual Investigator recommends a secondary inspection before clearance.</p></div></div>'
+      : '<div class="reco clear"><span class="ric"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#0a9d57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Eligible for clearance</b><p>No high-risk indicators detected. Standard processing recommended.</p></div></div>';
 
     var insV = t.insuranceExpired
       ? '<span class="pill-bad">EXPIRED · ' + fmt(t.insuranceExpiry) + '</span>'
@@ -176,14 +176,14 @@
     var html =
       '<div class="risk-hero glass-hi glass">' + ring(t.score, 96) +
         '<div class="rh-tx"><div class="lvl" style="color:' + col + '">' + lvl + ' Risk</div>' +
-        '<div class="src"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#64d2ff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Assessed by <b>SAS Visual Investigator</b></div>' +
+        '<div class="src"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#0c8f63" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Assessed by <b>SAS Visual Investigator</b></div>' +
         '<div class="src">' + t.vehicle + ' · ' + t.eta + '</div></div></div>' +
 
       reco +
 
       '<div class="info-card glass"><h4>Key Indicators</h4>' +
         kv(ICN.box, "Dual-use products", dualV) +
-        (t.dualUse ? '<div class="kv"><span class="k" style="padding-left:40px">Item</span><span class="v" style="font-weight:600;color:#cdd6ee">' + t.dualUse + '</span></div>' : '') +
+        (t.dualUse ? '<div class="kv"><span class="k" style="padding-left:43px">Item</span><span class="v" style="font-weight:600">' + t.dualUse + '</span></div>' : '') +
         kv(ICN.shield, "Insurance expiry", insV) +
         kv(ICN.car, "Vehicle number", t.plate) +
         kv(ICN.doc, "Declaration code", t.decl + (t.declMatch ? '' : ' <span class="pill-bad" style="margin-left:6px">MISMATCH</span>')) +
@@ -214,10 +214,10 @@
   function renderAlerts() {
     document.getElementById("alert-list").innerHTML = ALERTS.map(function (a) {
       var ic = a.sev === "green"
-        ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+        ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
         : a.sev === "blue"
-        ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>'
-        : flagIc.replace('12" height="12"', '20" height="20"').replace('stroke="currentColor"', 'stroke="#fff"');
+        ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>'
+        : flagIc.replace('12" height="12"', '20" height="20"');
       return '<div class="alert glass ' + (a.unread ? 'al-unread' : '') + '">' +
         '<span class="al-ic ' + a.sev + '">' + ic + '</span>' +
         '<div class="al-tx"><div class="at"><b>' + a.title + '</b><span class="time">' + a.time + '</span></div>' +
