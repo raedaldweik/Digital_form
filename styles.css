@@ -95,6 +95,14 @@ body {
   width: 520px; height: 360px;
   background: radial-gradient(closest-side, rgba(255,196,150,.45), rgba(255,170,140,.12) 55%, transparent 75%);
 }
+/* real photo (drops in over the CSS scene; CSS scene is the fallback) */
+.scene-photo {
+  position: absolute; inset: 0;
+  background-image: url('assets/welcome-bg.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
 .scene-net { position: absolute; top: 0; left: 0; width: 100%; height: 46%; }
 .scene-skyline { position: absolute; left: 0; right: 0; top: 30%; width: 100%; height: 42%; }
 .scene-fade {
