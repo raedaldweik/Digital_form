@@ -78,8 +78,8 @@ body {
 
 /* ===== WELCOME (full image + invisible hotspots) ===== */
 .screen-welcome { background: #0c1c36; }
-.welcome-full { position: relative; width: 100%; min-height: 100%; background: #0c1c36; }
-.welcome-img { display: block; width: 100%; height: auto; }
+.welcome-full { position: relative; width: 100%; height: 100vh; background: #0c1c36; overflow: hidden; }
+.welcome-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 
 /* transparent, percentage-positioned click-zones that scale with the image */
 .hot {
@@ -277,8 +277,8 @@ body {
 
 /* ===== full-image design pages (Step 1 & Step 2) — isolated, do not affect other screens ===== */
 .screen-img { background: #fdfdfd; min-height: 100vh; }
-.imgwrap { position: relative; width: 100%; container-type: inline-size; }
-.designimg { display: block; width: 100%; height: auto; }
+.imgwrap { position: relative; width: 100%; height: 100vh; container-type: inline-size; overflow: hidden; }
+.designimg { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .imgform { position: absolute; inset: 0; margin: 0; }
 .ovl { position: absolute; box-sizing: border-box; }
 .ovl-input {
