@@ -59,7 +59,8 @@ body {
 /* ===== top bar ===== */
 .topbar {
   display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px; background: var(--bg);
+  padding: 14px 16px; padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  background: var(--bg);
   position: sticky; top: 0; z-index: 5;
 }
 .topbar--ghost { background: transparent; position: relative; }
