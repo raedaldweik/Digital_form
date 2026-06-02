@@ -206,7 +206,31 @@
     var vehicleText = [v.plate, v.model].filter(Boolean).join(" · ") || "—";
     document.getElementById("res-vehicle").textContent = vehicleText;
 
+    saveSubmission(ref, lane);
     drawQR(document.getElementById("qr-canvas"), ref);
+  }
+
+  /* Persist the submission so the Officer app can pick it up (shared localStorage). */
+  function saveSubmission(ref, lane) {
+    try {
+      var tr = state.traveler || {}, v = state.vehicle || {};
+      var sub = {
+        ref: ref,
+        lane: lane,
+        driver: tr.fullname || "Traveller",
+        nat: tr.nationality || "—",
+        plate: v.plate ? ("KW " + v.plate) : "KW —",
+        vehicle: [v.model, v.color].filter(Boolean).join(" · ") || "—",
+        decl: ref,
+        insuranceExpiry: v.insexpiry || "",
+        submittedAt: Date.now()
+      };
+      var key = "ksb_submissions";
+      var arr = JSON.parse(localStorage.getItem(key) || "[]");
+      arr.push(sub);
+      if (arr.length > 25) arr = arr.slice(arr.length - 25);
+      localStorage.setItem(key, JSON.stringify(arr));
+    } catch (e) { /* storage unavailable — ignore */ }
   }
 
   /* ---------- pseudo-QR (deterministic from reference) ---------- */

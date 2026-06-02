@@ -64,6 +64,33 @@
       body: "Risk scoring model v3.2 deployed. Incident-history weighting increased." }
   ];
 
+  /* ---------- traveller submissions (shared from the user app via localStorage) ---------- */
+  var extra = [];
+  function getTasks() { return extra.concat(TASKS); }
+  function hashStr(s) { var h = 0; s = String(s); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+  function isoPast(months, day) { var d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - months); d.setDate(day); return d.toISOString().slice(0, 10); }
+  function mapSubmission(s) {
+    var seed = hashStr(s.ref || s.id || "x");
+    // Every traveller submission is surfaced as a "somewhat risky" review case:
+    // SAS cross-check flags the insurance policy as lapsed in national records.
+    var score = 64 + (seed % 19);          // 64–82
+    return {
+      id: s.ref || s.id, plate: s.plate || "KW —", decl: s.decl || s.ref || "—",
+      driver: s.driver || "Traveller", nat: s.nat || "—",
+      vehicle: s.vehicle || "—", lane: s.lane || 1, score: score,
+      status: "pending", eta: "Just submitted",
+      insuranceExpiry: isoPast(1 + (seed % 8), 1 + (seed % 26)),
+      insuranceExpired: true,
+      dualUse: null, incidents: seed % 2, declMatch: true, isNew: true
+    };
+  }
+  function loadSubmissions() {
+    try {
+      var arr = JSON.parse(localStorage.getItem("ksb_submissions") || "[]");
+      extra = arr.map(mapSubmission).reverse();   // newest first
+    } catch (e) { extra = []; }
+  }
+
   function levelOf(score) { return score >= 70 ? "High" : score >= 40 ? "Medium" : "Low"; }
   function colorOf(level) { return level === "High" ? "#df3a2f" : level === "Medium" ? "#d9870a" : "#0a9d57"; }
 
@@ -102,7 +129,7 @@
     return '<div class="task glass" data-task="' + t.id + '">' +
       ring(t.score, 56) +
       '<div class="task-main">' +
-        '<div class="task-top"><span class="plate">' + t.plate + '</span><span class="lane">Lane ' + t.lane + '</span></div>' +
+        '<div class="task-top"><span class="plate">' + t.plate + '</span><span class="lane">Lane ' + t.lane + '</span>' + (t.isNew ? '<span class="newtag">NEW</span>' : '') + '</div>' +
         '<div class="task-driver">' + t.driver + ' · ' + t.nat + ' · <span class="level-tag level-' + lvl + '">' + lvl + ' risk</span></div>' +
         '<div class="flags">' + flagsHTML(t) + '</div>' +
       '</div>' +
@@ -112,8 +139,9 @@
 
   /* ---------- renders ---------- */
   function renderHome() {
-    var pending = TASKS.filter(function (t) { return t.status === "pending"; });
-    var high = TASKS.filter(function (t) { return levelOf(t.score) === "High"; });
+    var all = getTasks();
+    var pending = all.filter(function (t) { return t.status === "pending"; });
+    var high = all.filter(function (t) { return levelOf(t.score) === "High"; });
     var unread = ALERTS.filter(function (a) { return a.unread; });
     document.getElementById("stat-assigned").textContent = pending.length;
     document.getElementById("stat-high").textContent = high.length;
@@ -121,13 +149,13 @@
     document.getElementById("badge-tasks").textContent = pending.length;
     document.getElementById("badge-alerts").textContent = unread.length;
 
-    var top = TASKS.slice().sort(function (a, b) { return b.score - a.score; }).slice(0, 2);
+    var top = all.slice().sort(function (a, b) { return b.score - a.score; }).slice(0, 2);
     document.getElementById("priority-list").innerHTML = top.map(taskCard).join("");
   }
 
   var currentFilter = "all";
   function renderTasks() {
-    var list = TASKS.filter(function (t) {
+    var list = getTasks().filter(function (t) {
       if (currentFilter === "all") return true;
       if (currentFilter === "pending") return t.status === "pending";
       return levelOf(t.score) === currentFilter;
@@ -255,7 +283,7 @@
   document.addEventListener("click", function (e) {
     var taskEl = e.target.closest("[data-task]");
     if (taskEl) {
-      var t = TASKS.filter(function (x) { return x.id === taskEl.getAttribute("data-task"); })[0];
+      var t = getTasks().filter(function (x) { return x.id === taskEl.getAttribute("data-task"); })[0];
       if (t) { renderTask(t); show("screen-task"); }
       return;
     }
@@ -278,7 +306,13 @@
   });
 
   /* ---------- init ---------- */
+  function refresh() { loadSubmissions(); renderHome(); renderTasks(); }
+  loadSubmissions();
   renderHome();
   renderTasks();
   renderAlerts();
+
+  // pick up new traveller submissions live (same-origin localStorage)
+  window.addEventListener("storage", function (e) { if (e.key === "ksb_submissions") refresh(); });
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) refresh(); });
 })();

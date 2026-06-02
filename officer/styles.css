@@ -227,6 +227,7 @@ body::after {
 .task-top { display: flex; align-items: center; gap: 8px; }
 .plate { font-size: 15px; font-weight: 800; letter-spacing: .3px; color: var(--ink); }
 .lane { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 8px; background: var(--accent-tint); border: 1px solid var(--accent-line); color: var(--accent-deep); }
+.newtag { font-size: 9.5px; font-weight: 800; letter-spacing: .4px; padding: 3px 7px; border-radius: 7px; background: var(--accent); color: #fff; }
 .task-driver { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
 .flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .flag { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; padding: 4px 9px; border-radius: 9px; background: rgba(20,40,80,.05); border: 1px solid var(--line); color: var(--ink-2); }
