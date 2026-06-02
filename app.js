@@ -167,6 +167,15 @@
       largecash: yn("largecash")
     };
 
+    show("screen-vehicle");
+  });
+
+  /* ---------- step 3 (vehicle) submit -> confirmation ---------- */
+  document.getElementById("form-vehicle").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!this.checkValidity()) { this.reportValidity(); return; }
+    var fd = new FormData(this);
+    state.vehicle = Object.fromEntries(fd.entries());
     renderConfirmation();
     show("screen-result");
   });
@@ -192,6 +201,11 @@
     document.getElementById("res-date").textContent = d.toLocaleDateString("en-GB", dateOpts);
     document.getElementById("res-valid").textContent = "23:59 · " + d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
     document.getElementById("res-ref").textContent = ref;
+
+    var v = state.vehicle || {};
+    var vehicleText = [v.plate, v.model].filter(Boolean).join(" · ") || "—";
+    document.getElementById("res-vehicle").textContent = vehicleText;
+
     drawQR(document.getElementById("qr-canvas"), ref);
   }
 

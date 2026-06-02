@@ -214,6 +214,13 @@ body {
 .result-hero.is-inspection { background: radial-gradient(120% 80% at 50% -10%, #d99a2a 0%, #a4690f 55%, #8a560b 100%); }
 .result-hero.is-submitted { background: radial-gradient(120% 80% at 50% -10%, #1b4a86 0%, #143a6b 50%, #0f2444 100%); }
 
+/* ===== Vehicle Information page (coded, matches the image pages) ===== */
+.screen-vehicle, .screen-vehicle .topbar { background: #fdfdfd; }
+.brand-logo { height: 38px; width: auto; flex: none; }
+.brand-emblem-img { height: 46px; width: auto; margin-inline-start: auto; flex: none; }
+.input-ic { display: inline-flex; align-items: center; justify-content: center; }
+.input-ic svg { display: block; }
+
 /* neutral lane card */
 .lane-card { text-align: center; padding: 22px 18px; }
 .lane-label { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--muted); }

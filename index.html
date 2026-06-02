@@ -78,11 +78,119 @@
       </div>
     </section>
 
+    <!-- ============ STEP 3 — VEHICLE INFO (coded, styled to match design) ============ -->
+    <section class="screen screen-form screen-vehicle" id="screen-vehicle">
+      <header class="topbar">
+        <button class="iconbtn" data-goto="screen-step2" aria-label="Back">‹</button>
+        <img class="brand-logo" src="assets/logo_brand.png" alt="Kuwait Smart Border Declaration" />
+        <img class="brand-emblem-img" src="assets/logo_emblem.png" alt="State of Kuwait" />
+      </header>
+      <div class="screen-scroll">
+        <div class="page-head">
+          <div>
+            <h2 class="page-title">Vehicle Information</h2>
+            <p class="page-sub">Please enter your vehicle details</p>
+          </div>
+          <div class="step-badge"><span class="step-num">3</span> of 3</div>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+
+        <form id="form-vehicle" class="form" novalidate>
+          <label class="field">
+            <span class="field-label">Plate Number <i>*</i></span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.6A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.4L19 13M4.5 13h15v4h-15z"/><circle cx="8" cy="17" r="1.3"/><circle cx="16" cy="17" r="1.3"/></svg></span>
+              <input type="text" name="plate" placeholder="e.g. 3 / 84210" autocomplete="off" required />
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Registration Country <i>*</i></span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V3"/><path d="M6 4h11l-2.2 3.2L17 11H6"/></svg></span>
+              <select name="regcountry" required>
+                <option value="Kuwait" selected>Kuwait</option>
+                <option>Saudi Arabia</option>
+                <option>U.A.E.</option>
+                <option>Bahrain</option>
+                <option>Qatar</option>
+                <option>Oman</option>
+                <option>Iraq</option>
+                <option>Jordan</option>
+                <option>Other</option>
+              </select>
+              <span class="input-ic input-ic--end"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Vehicle Type <i>*</i></span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.6A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.4L19 13M4.5 13h15v4h-15z"/><circle cx="8" cy="17" r="1.3"/><circle cx="16" cy="17" r="1.3"/></svg></span>
+              <select name="vtype" required>
+                <option value="">Select type</option>
+                <option>Sedan</option>
+                <option>SUV</option>
+                <option>Pickup Truck</option>
+                <option>Van</option>
+                <option>Bus</option>
+                <option>Truck (Freight)</option>
+                <option>Motorcycle</option>
+              </select>
+              <span class="input-ic input-ic--end"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Make &amp; Model <i>*</i></span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+              <input type="text" name="model" placeholder="e.g. Toyota Land Cruiser" autocomplete="off" required />
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Colour</span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.4 6 10a6 6 0 0 1-12 0c0-3.6 6-10 6-10z"/></svg></span>
+              <input type="text" name="color" placeholder="e.g. White" autocomplete="off" />
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Insurance Policy Number <i>*</i></span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3.1 7.8-7 9-3.9-1.2-7-4.4-7-9V6z"/></svg></span>
+              <input type="text" name="policy" placeholder="Enter policy number" autocomplete="off" required />
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Insurance Expiry <i>*</i></span>
+            <span class="input-wrap">
+              <span class="input-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2.5"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/></svg></span>
+              <input type="date" name="insexpiry" lang="en-GB" required onclick="try{this.showPicker()}catch(e){}" />
+            </span>
+          </label>
+
+          <div class="notice">
+            <span class="notice-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3.1 7.8-7 9-3.9-1.2-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+            <span>Vehicle &amp; insurance details are verified against national records at the border.</span>
+          </div>
+
+          <button class="btn btn-navy btn-block" type="submit">
+            <span>Submit Declaration</span><span class="btn-arrow">›</span>
+          </button>
+          <p class="trust">🔒 <span>Secure • Official • Trusted</span></p>
+        </form>
+      </div>
+    </section>
+
     <!-- ============ RESULT (neutral submission confirmation) ============ -->
     <section class="screen screen-result" id="screen-result">
       <div class="result-hero is-submitted">
         <header class="topbar topbar--ghost">
-          <button class="iconbtn" data-goto="screen-step2" aria-label="Back">‹</button>
+          <button class="iconbtn" data-goto="screen-vehicle" aria-label="Back">‹</button>
           <div class="topbar-brand">
             <div class="brand-text brand-text--center">
               <span class="brand-ar">منصة التصريح الذكي للمنافذ الحدودية</span>
@@ -108,6 +216,7 @@
           <div class="detail-grid">
             <div class="detail-row"><span class="d-ic">📅</span><div><div class="d-k">Date</div><div class="d-v" id="res-date">—</div></div></div>
             <div class="detail-row"><span class="d-ic">⏰</span><div><div class="d-k">Valid until</div><div class="d-v" id="res-valid">—</div></div></div>
+            <div class="detail-row"><span class="d-ic">🚗</span><div><div class="d-k">Vehicle</div><div class="d-v" id="res-vehicle">—</div></div></div>
             <div class="detail-row"><span class="d-ic">📍</span><div><div class="d-k">Crossing point</div><div class="d-v">Nuwaiseeb Border Crossing</div></div></div>
             <div class="detail-row"><span class="d-ic">🧾</span><div><div class="d-k">Declaration code</div><div class="d-v" id="res-ref">—</div></div></div>
           </div>
