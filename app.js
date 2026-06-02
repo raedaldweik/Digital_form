@@ -153,6 +153,8 @@
 
     if (!get("departure")) { document.getElementById("departure").focus(); return; }
 
+    // Collected for the record only. The traveller is NOT shown any
+    // approval / risk outcome — only the officer side sees the assessment.
     state.travel = {
       purpose: get("purpose"),
       departure: get("departure"),
@@ -165,14 +167,7 @@
       largecash: yn("largecash")
     };
 
-    var flagged =
-      state.travel.restricted === "Yes" ||
-      state.travel.merchandise === "Yes" ||
-      state.travel.largecash === "Yes" ||
-      state.travel.cash > 10000 ||
-      items.indexOf("Commercial") > -1;
-
-    renderResult(flagged ? "inspection" : "approved");
+    renderConfirmation();
     show("screen-result");
   });
 
@@ -184,97 +179,20 @@
     return prefix + "-" + d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "-" + rand;
   }
 
-  function renderResult(kind) {
-    var hero = document.getElementById("result-hero");
-    var emblem = document.getElementById("result-emblem");
-    var title = document.getElementById("result-title");
-    var sub = document.getElementById("result-sub");
-    var pill = document.getElementById("risk-pill");
-    var riskText = document.getElementById("risk-text");
-    var qrCard = document.getElementById("qr-card");
-    var qrLabel = document.getElementById("qr-label");
-    var qrFoot = document.getElementById("qr-foot");
-    var detailTitle = document.getElementById("detail-title");
-    var detailBody = document.getElementById("detail-body");
-    var summary = document.getElementById("summary-list");
-    var notice = document.getElementById("result-notice");
-    var primary = document.getElementById("result-primary");
-
-    var approved = kind === "approved";
-    var ref = refCode(approved ? "KWD" : "REF");
+  function renderConfirmation() {
+    var ref = refCode("KSB");
     state.reference = ref;
 
-    hero.classList.toggle("is-approved", approved);
-    hero.classList.toggle("is-inspection", !approved);
-    document.getElementById("screen-result").classList.toggle("is-inspection", !approved);
+    // assign a lane (1–8) — neutral, no approval meaning
+    var lane = 1 + Math.floor(Math.random() * 8);
+    var d = new Date();
+    var dateOpts = { weekday: "short", day: "2-digit", month: "short", year: "numeric" };
 
-    emblem.textContent = approved ? "✅" : "🔎";
-    title.textContent = approved ? t("result.approvedTitle") : t("result.inspectTitle");
-    sub.textContent = approved ? t("result.approvedSub") : t("result.inspectSub");
-    riskText.textContent = approved ? t("risk.low") : t("risk.medium");
-
-    // summary
-    var rows = approved ? [
-      ["sum.identity", "val.passed"], ["sum.passport", "val.passed"],
-      ["sum.watchlist", "val.passed"], ["sum.travel", "val.passed"],
-      ["sum.compliance", "val.passed"]
-    ] : [
-      ["sum.identity", "val.passed"], ["sum.passport", "val.passed"],
-      ["sum.watchlist", "val.clear"], ["sum.risk", "val.medium", true],
-      ["sum.additional", "val.required", true]
-    ];
-    summary.innerHTML = "";
-    rows.forEach(function (r) {
-      var li = document.createElement("li");
-      li.innerHTML = '<span class="s-ic">' + (r[2] ? "🟠" : "✅") + '</span>' +
-        '<span class="s-name">' + t(r[0]) + '</span>' +
-        '<span class="s-val' + (r[2] ? ' s-val--warn' : '') + '">' + t(r[1]) + '</span>';
-      summary.appendChild(li);
-    });
-
-    // qr card styling
-    qrCard.classList.toggle("is-inspection-card", !approved);
-    qrLabel.textContent = approved ? t("qr.passLabel") : t("qr.inspectLabel");
-    qrFoot.textContent = approved ? t("qr.scanFoot") : ref;
+    document.getElementById("res-lane").textContent = lane;
+    document.getElementById("res-date").textContent = d.toLocaleDateString("en-GB", dateOpts);
+    document.getElementById("res-valid").textContent = "23:59 · " + d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    document.getElementById("res-ref").textContent = ref;
     drawQR(document.getElementById("qr-canvas"), ref);
-
-    // detail card
-    if (approved) {
-      detailTitle.textContent = t("lane.title");
-      var validDate = new Date(); validDate.setDate(validDate.getDate());
-      detailBody.innerHTML =
-        '<div class="detail-grid">' +
-          '<div class="detail-lane">' + t("lane.fast") + ' →</div>' +
-          '<div class="detail-row"><span class="d-ic">🧍</span><div><div class="d-k">' + t("lane.crossing") + '</div><div class="d-v">' + t("lane.crossingVal") + '</div></div></div>' +
-          '<div class="detail-row"><span class="d-ic">⏰</span><div><div class="d-k">' + t("lane.valid") + '</div><div class="d-v">23:59 • ' + validDate.toLocaleDateString() + '</div></div></div>' +
-          '<div class="detail-row"><span class="d-ic">🧾</span><div><div class="d-k">' + t("lane.ref") + '</div><div class="d-v">' + ref + '</div></div></div>' +
-        '</div>';
-      notice.className = "notice";
-      notice.innerHTML = '<span class="notice-ic">🛡️</span><span>' + t("result.notice") + '</span>';
-      primary.className = "btn btn-green btn-block";
-      primary.innerHTML = '<span>' + t("result.proceed") + '</span><span class="btn-arrow">›</span>';
-    } else {
-      detailTitle.textContent = t("detail.inspTitle");
-      var counter = "A-" + (10 + Math.floor(Math.random() * 18));
-      detailBody.innerHTML =
-        '<div class="detail-grid">' +
-          '<div class="detail-row"><div><div class="d-k">' + t("detail.counter") + '</div><div class="counter-big">' + counter + '</div></div></div>' +
-          '<div class="detail-row"><span class="d-ic">🧍</span><div><div class="d-k">' + t("lane.crossing") + '</div><div class="d-v">' + t("lane.crossingVal") + '</div></div></div>' +
-          '<div class="detail-row"><span class="d-ic">📋</span><div><div class="d-k">' + t("detail.instructions") + '</div><div class="d-v" style="font-weight:500">' + t("detail.instrText") + '</div></div></div>' +
-          '<div style="border-top:1px solid var(--line);margin-top:6px;padding-top:12px">' +
-            '<div class="expect-title">⚠️ ' + t("detail.expect") + '</div>' +
-            '<ul class="expect-list">' +
-              '<li>📄 ' + t("detail.e1") + '</li>' +
-              '<li>💬 ' + t("detail.e2") + '</li>' +
-              '<li>⏳ ' + t("detail.e3") + '</li>' +
-            '</ul>' +
-          '</div>' +
-        '</div>';
-      notice.className = "notice";
-      notice.innerHTML = '<span class="notice-ic">ℹ️</span><span>' + t("detail.instrText") + '</span>';
-      primary.className = "btn btn-amber btn-block";
-      primary.innerHTML = '<span>' + t("result.viewInstr") + '</span><span class="btn-arrow">›</span>';
-    }
   }
 
   /* ---------- pseudo-QR (deterministic from reference) ---------- */

@@ -212,6 +212,13 @@ body {
 .result-hero { color: #fff; padding: 0 20px 30px; text-align: center; }
 .result-hero.is-approved { background: radial-gradient(120% 80% at 50% -10%, #1f9a4d 0%, #0e6b35 55%, #0a5a2c 100%); }
 .result-hero.is-inspection { background: radial-gradient(120% 80% at 50% -10%, #d99a2a 0%, #a4690f 55%, #8a560b 100%); }
+.result-hero.is-submitted { background: radial-gradient(120% 80% at 50% -10%, #1b4a86 0%, #143a6b 50%, #0f2444 100%); }
+
+/* neutral lane card */
+.lane-card { text-align: center; padding: 22px 18px; }
+.lane-label { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--muted); }
+.lane-number { font-size: 76px; font-weight: 800; line-height: 1; color: var(--navy); margin: 6px 0 6px; letter-spacing: -2px; }
+.lane-sub { font-size: 13px; color: var(--muted); font-weight: 600; }
 .result-emblem {
   width: 96px; height: 96px; margin: 10px auto 16px; border-radius: 50%;
   display: grid; place-items: center; font-size: 44px;

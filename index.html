@@ -78,48 +78,53 @@
       </div>
     </section>
 
-    <!-- ============ RESULT ============ -->
+    <!-- ============ RESULT (neutral submission confirmation) ============ -->
     <section class="screen screen-result" id="screen-result">
-      <div class="result-hero" id="result-hero">
+      <div class="result-hero is-submitted">
         <header class="topbar topbar--ghost">
           <button class="iconbtn" data-goto="screen-step2" aria-label="Back">‹</button>
           <div class="topbar-brand">
             <div class="brand-text brand-text--center">
               <span class="brand-ar">منصة التصريح الذكي للمنافذ الحدودية</span>
-              <span class="brand-en" data-i18n="brand">KUWAIT SMART BORDER DECLARATION</span>
+              <span class="brand-en">KUWAIT SMART BORDER DECLARATION</span>
             </div>
           </div>
           <div class="brand-emblem">🛡️</div>
         </header>
-        <div class="result-emblem" id="result-emblem">✅</div>
-        <h2 class="result-title" id="result-title">Approved for Automated Clearance</h2>
-        <p class="result-sub" id="result-sub">You may use the Fast Track Lane</p>
-        <div class="risk-pill" id="risk-pill"><span class="risk-dot"></span> <span id="risk-text">Risk Level: Low</span></div>
+        <div class="result-emblem">📋</div>
+        <h2 class="result-title">Declaration Submitted</h2>
+        <p class="result-sub">Please proceed to your assigned lane</p>
       </div>
 
       <div class="screen-scroll result-body">
+        <div class="card lane-card">
+          <div class="lane-label">YOUR LANE</div>
+          <div class="lane-number" id="res-lane">—</div>
+          <div class="lane-sub">Vehicle Lane · Kuwait Border</div>
+        </div>
+
         <div class="card">
-          <div class="card-head"><span class="card-ic">📋</span><h3 data-i18n="res.summary">Decision Summary</h3></div>
-          <ul class="summary" id="summary-list"></ul>
+          <div class="card-head"><span class="card-ic">🗓️</span><h3>Crossing Details</h3></div>
+          <div class="detail-grid">
+            <div class="detail-row"><span class="d-ic">📅</span><div><div class="d-k">Date</div><div class="d-v" id="res-date">—</div></div></div>
+            <div class="detail-row"><span class="d-ic">⏰</span><div><div class="d-k">Valid until</div><div class="d-v" id="res-valid">—</div></div></div>
+            <div class="detail-row"><span class="d-ic">📍</span><div><div class="d-k">Crossing point</div><div class="d-v">Nuwaiseeb Border Crossing</div></div></div>
+            <div class="detail-row"><span class="d-ic">🧾</span><div><div class="d-k">Declaration code</div><div class="d-v" id="res-ref">—</div></div></div>
+          </div>
         </div>
 
-        <div class="card qr-card" id="qr-card">
-          <p class="qr-label" id="qr-label">Border Clearance Pass</p>
+        <div class="card qr-card">
+          <p class="qr-label">Border Pass</p>
           <canvas id="qr-canvas" width="220" height="220" class="qr"></canvas>
-          <p class="qr-foot" id="qr-foot">Scan at the border</p>
+          <p class="qr-foot">Present this code at the gate</p>
         </div>
 
-        <div class="card" id="detail-card">
-          <div class="card-head"><span class="card-ic">🏛️</span><h3 id="detail-title">Lane Assignment</h3></div>
-          <div id="detail-body"></div>
+        <div class="notice">
+          <span class="notice-ic">🛡️</span>
+          <span>Your information is securely processed for border clearance in accordance with Kuwait laws.</span>
         </div>
 
-        <div class="notice" id="result-notice"></div>
-
-        <button class="btn btn-block" id="result-primary"></button>
-        <button class="btn btn-ghost btn-block" data-goto="screen-welcome">
-          <span data-i18n="res.new">＋ New Declaration</span>
-        </button>
+        <button class="btn btn-navy btn-block" data-goto="screen-welcome"><span>Done</span></button>
       </div>
     </section>
 
