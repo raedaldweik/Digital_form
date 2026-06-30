@@ -64,10 +64,10 @@ body::after {
 /* ===== screens ===== */
 .screen { display: none; min-height: 100vh; flex-direction: column; }
 .screen.is-active { display: flex; }
-.scroll { flex: 1; overflow-y: auto; padding: calc(var(--statusbar) + 8px) 18px 124px; }
+.scroll { flex: 1; overflow-y: auto; padding: calc(var(--statusbar) + 8px) 18px 104px; }
 
 /* ===== HOME: dark hero header + content sheet ===== */
-.home-scroll { padding: 0 0 124px; }
+.home-scroll { padding: 0 0 104px; }
 .home-hero {
   position: relative; overflow: hidden; color: #fff;
   padding: calc(var(--statusbar) + 8px) 22px 56px;
@@ -324,18 +324,19 @@ body::after {
 
 /* ===== tab bar ===== */
 .tabbar {
-  position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px;
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   width: calc(100% - 28px); max-width: 452px;
   display: flex; justify-content: space-around; align-items: center;
-  padding: 11px 8px calc(11px + env(safe-area-inset-bottom, 0px));
+  padding: 7px 8px;
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%);
-  border: 1px solid var(--surface-hi); border-radius: 28px;
+  border: 1px solid var(--surface-hi); border-radius: 24px;
   box-shadow: var(--hi), 0 14px 40px rgba(23,43,84,.16); z-index: 30;
 }
-.tab { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: var(--faint); font-family: inherit; font-size: 10.5px; font-weight: 600; padding: 4px 12px; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; color: var(--faint); font-family: inherit; font-size: 10px; font-weight: 600; padding: 3px 10px; }
 .tab.is-active { color: var(--accent); }
-.tab svg { width: 24px; height: 24px; }
+.tab svg { width: 21px; height: 21px; }
 .tabbar.hidden { display: none; }
 
 .fade-in { animation: fade .4s ease; }
