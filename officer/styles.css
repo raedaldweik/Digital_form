@@ -421,3 +421,17 @@ body::after {
 /* ----- lightbox ----- */
 .lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(6,14,26,.86); display: grid; place-items: center; padding: 24px; cursor: zoom-out; }
 .lightbox img { max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+
+/* ----- government emblem bar (full 3 official emblems, below the notch) ----- */
+.gov-bar {
+  background-color: #b9bfe4;
+  background-image: url("../assets/welcome_bg.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center calc(30px + env(safe-area-inset-top, 0px));
+  height: calc(132px + env(safe-area-inset-top, 0px));
+}
+/* hero now sits below the gov bar — show the skyline, not the (already-shown) emblems */
+.home-hero { padding: 20px 22px 52px !important; }
+.home-hero .hero-bg img { object-position: center 72% !important; }
+.home-hero .hh-top { margin-bottom: 20px; }

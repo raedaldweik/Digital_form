@@ -536,3 +536,51 @@ body::after {
 /* ----- network search caption ----- */
 .net-found { font-size: 12.5px; color: var(--muted); margin: -2px 2px 12px; }
 .net-found b { color: var(--ink); }
+
+/* ----- government emblem bar (full 3 official emblems, below the notch) ----- */
+.gov-bar {
+  background-color: #b9bfe4;
+  background-image: url("../assets/welcome_bg.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center calc(30px + env(safe-area-inset-top, 0px));
+  height: calc(132px + env(safe-area-inset-top, 0px));
+}
+/* hero now sits below the gov bar — show the skyline, not the (already-shown) emblems */
+.home-hero { padding: 20px 22px 52px !important; }
+.home-hero .hero-bg img { object-position: center 72% !important; }
+.home-hero .hh-top { margin-bottom: 20px; }
+
+/* ----- tappable (linkable) network nodes ----- */
+.vi-node { cursor: pointer; }
+.vi-node.vi-link circle { stroke: #3a7bd5; stroke-width: 2.6; }
+
+/* ----- dashboard popups (Visual Analytics style) ----- */
+.dash-sheet { position: fixed; inset: 0; z-index: 130; background: rgba(8,14,26,.55); display: grid; place-items: end center; backdrop-filter: blur(3px); }
+.dash-card { background: #eef3fb; border-radius: 26px 26px 0 0; width: 100%; max-width: 480px; max-height: 88vh; display: flex; flex-direction: column; box-shadow: 0 -10px 40px rgba(0,0,0,.35); animation: dashup .28s ease; }
+@keyframes dashup { from { transform: translateY(40px); opacity: .6; } to { transform: none; opacity: 1; } }
+.dash-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 12px; }
+.dash-head > div { display: flex; align-items: center; gap: 10px; }
+.dash-head b { font-size: 17px; font-weight: 800; color: var(--ink); }
+.dash-x { width: 34px; height: 34px; border-radius: 50%; border: none; background: rgba(20,40,80,.07); color: var(--ink-2); font-size: 15px; cursor: pointer; }
+.dash-body { overflow-y: auto; padding: 0 16px 22px; }
+.dash-sec { background: #fff; border: 1px solid var(--surface-hi); border-radius: 18px; padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.dash-sec h5 { margin: 0 0 12px; font-size: 13px; font-weight: 800; color: var(--ink); }
+.dash-foot { font-size: 11px; color: var(--faint); text-align: center; margin: 6px 0 0; }
+.donut-wrap { display: flex; align-items: center; gap: 18px; }
+.dlegend { display: flex; flex-direction: column; gap: 9px; }
+.dleg { font-size: 12.5px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+.dleg i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex: none; }
+.dleg b { color: var(--ink); }
+.dbars { display: flex; flex-direction: column; gap: 10px; }
+.dbar { display: grid; grid-template-columns: 64px 1fr 30px; align-items: center; gap: 8px; }
+.dbar-l { font-size: 11.5px; color: var(--muted); font-family: "Inter", sans-serif; }
+.dbar-t { height: 9px; border-radius: 999px; background: rgba(20,40,80,.07); overflow: hidden; }
+.dbar-t > i { display: block; height: 100%; border-radius: 999px; }
+.dbar-v { font-size: 12px; font-weight: 800; color: var(--ink); text-align: left; }
+.acc-table { display: flex; flex-direction: column; }
+.acc-row { display: grid; grid-template-columns: 1.1fr 1.3fr .8fr; gap: 8px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 11.5px; align-items: center; }
+.acc-row:first-child { border-top: none; }
+.acc-u { font-weight: 700; color: var(--ink-2); font-family: "Inter", sans-serif; }
+.acc-a { color: var(--ink); }
+.acc-t { color: var(--muted); text-align: left; }

@@ -235,10 +235,9 @@
     var high = pen.filter(function (a) { return a.pct >= 70; }).length;
 
     var reports = [
-      { t: "تحليل مخاطر الجمارك", c: "#0c8f63" }, { t: "لوحة الجمارك", c: "#3a7bd5" },
-      { t: "تقرير الوصول للأنظمة", c: "#d9870a" }, { t: "لوحة التنبيهات والقواعد", c: "#df3a2f" }
+      { t: "تحليل مخاطر الجمارك", c: "#0c8f63", k: "risk" }, { t: "لوحة الجمارك", c: "#3a7bd5", k: "customs" },
+      { t: "تقرير الوصول للأنظمة", c: "#d9870a", k: "access" }, { t: "لوحة التنبيهات والقواعد", c: "#df3a2f", k: "rules" }
     ];
-    var firstCons = (cl.filter(function (a) { return a.consignment; })[0] || {}).consignment || {};
 
     document.getElementById("home-sheet").innerHTML =
       // KPIs
@@ -255,7 +254,7 @@
       // Reports
       '<div class="sec-h"><h3>التقارير</h3></div>' +
       '<div class="reports">' + reports.map(function (r) {
-        return '<div class="report-tile glass" data-toast="تقرير تجريبي — يُربط لاحقاً بـ SAS Visual Analytics"><b>' + r.t + '</b>' + miniBars(r.t, r.c) + '</div>';
+        return '<div class="report-tile glass" data-dash="' + r.k + '"><b>' + r.t + '</b>' + miniBars(r.t, r.c) + '</div>';
       }).join("") + '</div>' +
       // Search center
       '<div class="sec-h"><h3>مركز البحث</h3></div>' +
@@ -266,13 +265,16 @@
           '<button class="scan-btn" id="scan-plate" type="button"><span>مسح اللوحة</span></button></div>' +
         '<div class="scan-hintbar" id="scan-hint" hidden>📷 جارٍ محاكاة مسح اللوحة…</div>' +
       '</div>' +
-      // Consignment search (SAS-style)
+      // Consignment search (SAS-style) — a real search form
       '<div class="cons-search glass"><h4><span class="vi-logo" style="width:24px;height:24px;border-radius:7px;font-size:10px">VI</span> بحث الشحنات</h4>' +
-        consField("رقم الشحنة", firstCons.id || "—") +
-        consField("الرقم المرجعي", firstCons.ref || "—") +
-        consField("الرقم الضريبي للمرسل إليه", firstCons.consigneeTIN || "—") +
-        consField("رقم القيد", firstCons.entryNumber || "—") +
-        '<div class="cons-field"><label>قاموس رموز النظام المنسق (HS) — ١٠ أرقام</label>' +
+        '<p style="margin:-6px 0 12px;font-size:12px;color:var(--muted)">ابحث في الشحنات بأي من الحقول التالية</p>' +
+        consSearchField("رقم الشحنة", "cs-id", "مثال: 324931861") +
+        consSearchField("الرقم المرجعي", "cs-ref", "مثال: Cs 324931861") +
+        consSearchField("الرقم الضريبي للمرسل إليه", "cs-tin", "مثال: KW-300441") +
+        consSearchField("رقم القيد", "cs-entry", "مثال: EN-2024-77310") +
+        '<button class="btn btn-invest" id="cons-search-btn" style="width:100%;margin-top:4px">' +
+          '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg> بحث</button>' +
+        '<div class="cons-field" style="margin-top:14px"><label>قاموس رموز النظام المنسق (HS) — ١٠ أرقام</label>' +
           '<input class="cf-in" id="hs-lookup" placeholder="أدخل رمز HS…" autocomplete="off" inputmode="numeric" />' +
           '<div class="hs-out" id="hs-out"></div></div>' +
       '</div>';
@@ -284,6 +286,7 @@
     });
   }
   function consField(label, val) { return '<div class="cons-field"><label>' + label + '</label><div class="cf-in">' + val + '</div></div>'; }
+  function consSearchField(label, id, ph) { return '<div class="cons-field"><label>' + label + '</label><input class="cf-in" id="' + id + '" placeholder="' + ph + '" autocomplete="off" /></div>'; }
   function svgSearch() { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'; }
   function svgDoc() { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>'; }
   function svgCar() { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.6A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.4L19 13M4.5 13h15v4h-15z"/><circle cx="8" cy="17" r="1.3"/><circle cx="16" cy="17" r="1.3"/></svg>'; }
@@ -297,7 +300,9 @@
     list = list.filter(function (a) {
       if (strategyFilter !== "all" && a.strategy !== strategyFilter) return false;
       if (searchTerm) {
-        var hay = (a.driver + " " + a.plate + " " + a.ref + " " + (a.consignment ? a.consignment.id + " " + a.consignment.ref : "")).toLowerCase();
+        var c = a.consignment;
+        var hay = (a.driver + " " + a.plate + " " + a.ref + " " + (a.traveler.passport || "") + " " +
+          (c ? [c.id, c.ref, c.consigneeTIN, c.entryNumber, c.consignor, c.consignee].join(" ") : "")).toLowerCase();
         if (hay.indexOf(searchTerm.toLowerCase()) === -1) return false;
       }
       return true;
@@ -309,11 +314,18 @@
   /* ============================ NETWORK ============================ */
   var ICN = { veh: "🚗", pass: "🛂", wak: "🏢", ctry: "🌍", decl: "🧾", org: "🏭", imp: "🏢", cons: "📦", per: "👤" };
   function polar(cx, cy, R, deg) { var r = deg * Math.PI / 180; return [cx + R * Math.cos(r), cy + R * Math.sin(r)]; }
-  function nodeEl(x, y, ic, label, cls, data) {
-    return '<g class="vi-node ' + (cls || "") + '" data-node="' + data + '" style="transform:translate(' + x + 'px,' + y + 'px)">' +
+  function nodeEl(x, y, ic, label, cls, data, ref) {
+    return '<g class="vi-node ' + (cls || "") + (ref ? " vi-link" : "") + '" data-node="' + data + '"' + (ref ? ' data-noderef="' + ref + '"' : "") +
+      ' style="transform:translate(' + x + 'px,' + y + 'px)">' +
       '<circle r="22"/><text class="vi-ic" text-anchor="middle" dy="6">' + ic + '</text>' +
       '<text class="vi-lbl" text-anchor="middle" dy="38">' + label + '</text></g>';
   }
+  // resolve a related org / consignment to a real case ref (so the node can be opened)
+  function caseRefByOrg(name) {
+    var m = allApplicants().filter(function (a) { var c = a.consignment; return c && ((c.consignor && c.consignor.indexOf(name) >= 0) || (c.consignee && c.consignee.indexOf(name) >= 0)); })[0];
+    return m ? m.ref : null;
+  }
+  function caseRefByConsId(id) { var m = allApplicants().filter(function (a) { return a.consignment && a.consignment.id === id; })[0]; return m ? m.ref : null; }
   function trunc(s, n) { s = String(s); return s.length > (n || 15) ? s.slice(0, (n || 15) - 1) + "…" : s; }
   function networkSVG(a, expanded) {
     var W = 360, cx = W / 2, cy = expanded ? 184 : 150, H = expanded ? 368 : 300;
@@ -340,18 +352,18 @@
     // expanded entity-resolution ring (fabricated SHARED entities, distinct from direct ones)
     if (expanded) {
       var extra = c
-        ? [{ ic: ICN.org, label: "Global Exports", t: "كيان مرتبط|Global Exports Ltd — مُصدِّر مشترك" },
-           { ic: ICN.per, label: "Avery Johnson", t: "كيان مرتبط|Avery Johnson Import" },
+        ? [{ ic: ICN.org, label: "Global Exports", t: "كيان مرتبط|Global Exports Ltd — مُصدِّر مشترك", ref: caseRefByOrg("Global Exports") },
+           { ic: ICN.per, label: "Avery Johnson", t: "كيان مرتبط|Avery Johnson Import", ref: caseRefByOrg("Avery Johnson") },
            { ic: ICN.cons, label: "312…904", t: "شحنة مرتبطة|نفس المستورد" },
            { ic: ICN.cons, label: "298…551", t: "شحنة مرتبطة|نفس الرقم الضريبي" }]
-        : [{ ic: ICN.org, label: "Continental", t: "كيان مرتبط|Continental Trading" },
-           { ic: ICN.per, label: "Avery Johnson", t: "كيان مرتبط|Avery Johnson Import" },
-           { ic: ICN.cons, label: "324…861", t: "شحنة مرتبطة|نفس الوكالة" }];
+        : [{ ic: ICN.org, label: "Continental", t: "كيان مرتبط|Continental Trading", ref: caseRefByOrg("Continental") },
+           { ic: ICN.per, label: "Avery Johnson", t: "كيان مرتبط|Avery Johnson Import", ref: caseRefByOrg("Avery Johnson") },
+           { ic: ICN.cons, label: "324…861", t: "شحنة مرتبطة|نفس الوكالة", ref: caseRefByConsId("324931861") }];
       var M = extra.length, half = 180 / N;
       extra.forEach(function (d, i) {
         var p = polar(cx, cy, 156, -90 + half + i * (360 / M));
         lines += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="rgba(58,123,213,.4)" stroke-width="1.4" stroke-dasharray="4 4"/>';
-        nodes += nodeEl(p[0], p[1], d.ic, trunc(d.label, 14), "warn", d.t);
+        nodes += nodeEl(p[0], p[1], d.ic, trunc(d.label, 14), "warn", d.t, d.ref);
       });
     }
     var col = colorOf(a.level);
@@ -366,6 +378,7 @@
     var cap = a.consignment
       ? "تحليل الشبكة كشف شحنات مرتبطة تشترك في نفس المستورد / الرقم الضريبي — مؤشر محتمل على تجزئة الإرسالية."
       : "تحليل الشبكة يربط المسافر بمركبته ووثائقه ووكالته وبلد مغادرته.";
+    cap += netExp[key] ? " اضغط على أي كيان مميّز (◳) لفتح قضيته." : " اضغط «توسيع الروابط» لكشف الكيانات المشتركة.";
     return '<div class="net-host" data-key="' + key + '">' +
       '<h4 style="margin:0 0 6px;font-size:12px;font-weight:800;color:var(--faint);letter-spacing:1px">شبكة الكيانات</h4>' +
       networkSVG(a, netExp[key]) +
@@ -531,7 +544,8 @@
         docBlock("دفتر السيارة", a.documents.daftar, null) +
         docBlock("البيان الجمركي", a.documents.declaration, "../assets/decleration.jpeg") +
       '</div></div>';
-      return cons + person + veh + wak + mapPanel(a) + vehiclePanel(a) + docs;
+      return cons + person + veh + wak + mapPanel(a) + vehiclePanel(a) + docs +
+        '<div class="info-card glass" id="net-case">' + networkInner(a, "case") + '</div>';
     }
     if (tab === "triggers") {
       if (!a.sc.scenarios.length) return '<p style="color:var(--muted);text-align:center;padding:24px">لا توجد محفزات.</p>';
@@ -611,6 +625,73 @@
     el.style.cssText = "position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(20,33,54,.95);color:#fff;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.3)";
     document.body.appendChild(el); setTimeout(function () { el.remove(); }, 1800);
   }
+  /* ---------- dashboards (Visual Analytics-style popups) ---------- */
+  function channelKey(total) { return total >= 300 ? "red" : total >= 120 ? "yellow" : "green"; }
+  function dashStats() {
+    var cl = caseload(), ch = { red: 0, yellow: 0, green: 0 }, st = { investigator: 0, approved: 0, rejected: 0 }, strat = { Customs: 0, Air: 0 }, origin = {}, scen = {};
+    cl.forEach(function (a) {
+      ch[channelKey(a.total)]++;
+      st[a.status] = (st[a.status] || 0) + 1;
+      strat[a.strategy] = (strat[a.strategy] || 0) + 1;
+      var o = ctry((a.consignment && a.consignment.origin) || a.travel.departure || "—"); origin[o] = (origin[o] || 0) + 1;
+      a.sc.all.forEach(function (s) { if (!scen[s.id]) scen[s.id] = { n: 0, sum: 0 }; if (s.active) { scen[s.id].n++; scen[s.id].sum += s.score; } });
+    });
+    return { cl: cl, ch: ch, st: st, strat: strat, origin: origin, scen: scen };
+  }
+  function donutSVG(segs) {
+    var r = 52, circ = 2 * Math.PI * r, total = segs.reduce(function (s, x) { return s + x.v; }, 0) || 1, off = 0;
+    var arcs = segs.filter(function (s) { return s.v > 0; }).map(function (s) {
+      var len = circ * s.v / total;
+      var el = '<circle cx="65" cy="65" r="52" fill="none" stroke="' + s.color + '" stroke-width="16" stroke-dasharray="' + len + ' ' + (circ - len) + '" stroke-dashoffset="' + (-off) + '" transform="rotate(-90 65 65)"/>';
+      off += len; return el;
+    }).join("");
+    return '<svg width="130" height="130" viewBox="0 0 130 130">' + arcs + '<text x="65" y="61" text-anchor="middle" font-size="26" font-weight="800" fill="#142136">' + total + '</text><text x="65" y="80" text-anchor="middle" font-size="10" fill="#62708c">إجمالي</text></svg>';
+  }
+  function legend(segs) { return '<div class="dlegend">' + segs.map(function (s) { return '<div class="dleg"><i style="background:' + s.color + '"></i>' + s.label + ' <b>' + toAr(s.v) + '</b></div>'; }).join("") + '</div>'; }
+  function barsSVG(data) {
+    var max = Math.max.apply(null, data.map(function (d) { return d.v; }).concat([1]));
+    return '<div class="dbars">' + data.map(function (d) {
+      return '<div class="dbar"><span class="dbar-l">' + d.label + '</span><div class="dbar-t"><i style="width:' + Math.max(4, Math.round(d.v / max * 100)) + '%;background:' + (d.color || "#3a7bd5") + '"></i></div><span class="dbar-v">' + toAr(d.v) + '</span></div>';
+    }).join("") + '</div>';
+  }
+  function openDashboard(key) {
+    var s = dashStats(), title = "", body = "";
+    if (key === "risk") {
+      title = "تحليل مخاطر الجمارك";
+      var segs = [{ label: "القناة الحمراء", v: s.ch.red, color: "#df3a2f" }, { label: "القناة الصفراء", v: s.ch.yellow, color: "#d9870a" }, { label: "القناة الخضراء", v: s.ch.green, color: "#0a9d57" }];
+      var scenSum = Object.keys(s.scen).filter(function (id) { return s.scen[id].sum > 0; }).map(function (id) { return { label: id.replace("_Score", ""), v: s.scen[id].sum, color: s.scen[id].sum >= 300 ? "#df3a2f" : s.scen[id].sum >= 120 ? "#d9870a" : "#0c8f63" }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 6);
+      body = '<div class="dash-sec"><h5>توزيع القنوات (الانتقائية)</h5><div class="donut-wrap">' + donutSVG(segs) + legend(segs) + '</div></div>' +
+        '<div class="dash-sec"><h5>أعلى السيناريوهات مساهمةً في النقاط</h5>' + barsSVG(scenSum.length ? scenSum : [{ label: "—", v: 0 }]) + '</div>';
+    } else if (key === "customs") {
+      title = "لوحة الجمارك";
+      var stseg = [{ label: "قيد التحقيق", v: s.st.investigator || 0, color: "#3a7bd5" }, { label: "معتمد", v: s.st.approved || 0, color: "#0a9d57" }, { label: "مرفوض", v: s.st.rejected || 0, color: "#df3a2f" }];
+      var stratBars = [{ label: "جمارك", v: s.strat.Customs || 0, color: "#0c8f63" }, { label: "جوي", v: s.strat.Air || 0, color: "#3a7bd5" }];
+      var origBars = Object.keys(s.origin).map(function (o) { return { label: o, v: s.origin[o], color: "#3a7bd5" }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 6);
+      body = '<div class="dash-sec"><h5>حسب الحالة</h5><div class="donut-wrap">' + donutSVG(stseg) + legend(stseg) + '</div></div>' +
+        '<div class="dash-sec"><h5>حسب الاستراتيجية</h5>' + barsSVG(stratBars) + '</div>' +
+        '<div class="dash-sec"><h5>حسب بلد المنشأ</h5>' + barsSVG(origBars) + '</div>';
+    } else if (key === "access") {
+      title = "تقرير الوصول للأنظمة";
+      var rows = [
+        { u: "mansour.alahmad", a: "تسجيل دخول", t: "اليوم ٠٩:١٤" }, { u: "officer.border", a: "تحويل قضية إلى المحقّق", t: "اليوم ٠٨:٥٢" },
+        { u: "sas.svi-alert", a: "إنشاء تنبيه آلي", t: "اليوم ٠٧:٠٨" }, { u: "mansour.alahmad", a: "اعتماد شحنة", t: "أمس ١٦:٤٠" },
+        { u: "admin.customs", a: "تعديل قاعدة سيناريو C3", t: "أمس ١١:٢٢" }, { u: "mansour.alahmad", a: "تصدير تقرير", t: "أمس ١٠:٠٥" }
+      ];
+      body = '<div class="dash-sec"><h5>أحدث عمليات الوصول</h5><div class="acc-table">' + rows.map(function (r) { return '<div class="acc-row"><span class="acc-u">' + r.u + '</span><span class="acc-a">' + r.a + '</span><span class="acc-t">' + r.t + '</span></div>'; }).join("") + '</div></div>' +
+        '<div class="dash-sec"><h5>النشاط حسب الساعة</h5>' + barsSVG([{ label: "٠٧:٠٠", v: 8, color: "#d9870a" }, { label: "٠٩:٠٠", v: 14, color: "#d9870a" }, { label: "١١:٠٠", v: 9, color: "#d9870a" }, { label: "١٣:٠٠", v: 6, color: "#d9870a" }, { label: "١٦:٠٠", v: 11, color: "#d9870a" }]) + '</div>';
+    } else {
+      title = "لوحة التنبيهات والقواعد";
+      var freq = ["C1_Score", "C2_Score", "C3_Score", "C4_Score", "C5_Score", "C6_Score", "C7_Score", "C8_Score", "C9_Score"].map(function (id) { return { label: id.replace("_Score", ""), v: (s.scen[id] ? s.scen[id].n : 0), color: "#df3a2f" }; });
+      body = '<div class="dash-sec"><h5>تكرار تفعيل السيناريوهات (عدد القضايا)</h5>' + barsSVG(freq) + '</div>' +
+        '<div class="dash-sec"><h5>التنبيهات خلال ٧ أيام</h5>' + barsSVG([{ label: "السبت", v: 12 }, { label: "الأحد", v: 18 }, { label: "الإثنين", v: 9 }, { label: "الثلاثاء", v: 22 }, { label: "الأربعاء", v: 15 }, { label: "الخميس", v: 20 }, { label: "الجمعة", v: 7 }]) + '</div>';
+    }
+    var sheet = document.createElement("div"); sheet.className = "dash-sheet";
+    sheet.innerHTML = '<div class="dash-card"><div class="dash-head"><div><span class="vi-logo" style="width:26px;height:26px;border-radius:8px;font-size:10px">VI</span><b>' + title + '</b></div><button class="dash-x" data-dashx>✕</button></div>' +
+      '<div class="dash-body">' + body + '<p class="dash-foot">تقرير تجريبي — يُعرض من SAS Visual Analytics عند ربط التطبيق.</p></div></div>';
+    sheet.addEventListener("click", function (e) { if (e.target === sheet || e.target.closest("[data-dashx]")) sheet.remove(); });
+    document.body.appendChild(sheet);
+  }
+
   function confirmSheet(action, ref) {
     var approve = action === "approve";
     var sheet = document.createElement("div"); sheet.className = "confirm-sheet";
@@ -647,14 +728,30 @@
   /* ============================ events ============================ */
   document.addEventListener("click", function (e) {
     var doc = e.target.closest(".doc[data-img]"); if (doc) { openLightbox(doc.getAttribute("data-img")); return; }
-    var tile = e.target.closest("[data-toast]"); if (tile) { toast(tile.getAttribute("data-toast")); return; }
+    var dash = e.target.closest("[data-dash]"); if (dash) { openDashboard(dash.getAttribute("data-dash")); return; }
+    if (e.target.closest("#cons-search-btn")) {
+      var q = ["cs-id", "cs-ref", "cs-tin", "cs-entry"].map(function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; }).filter(Boolean)[0] || "";
+      searchTerm = q; strategyFilter = "all";
+      var sa = document.getElementById("search-all"); if (sa) sa.value = q;
+      renderAlerts(); show("screen-alerts");
+      return;
+    }
 
     var net = e.target.closest("[data-net]");
     if (net) { var key = net.getAttribute("data-netkey"); netExp[key] = net.getAttribute("data-net") === "expand"; paintNet(key); return; }
 
     var node = e.target.closest(".vi-node[data-node]");
     if (node) {
-      var host = node.closest(".net-host"); if (host) {
+      var host = node.closest(".net-host");
+      var key = host ? host.getAttribute("data-key") : "case";
+      var nref = node.getAttribute("data-noderef");
+      if (nref) {
+        // linkable node → re-center the explorer, or open the case from inside an alert
+        if (key === "global") { netA.global = byRef(nref); netExp.global = false; renderGlobalNet(); }
+        else { var a2 = byRef(nref); if (a2) { renderCase(a2); show("screen-detail"); } }
+        return;
+      }
+      if (host) {
         host.querySelectorAll(".vi-node").forEach(function (n) { n.classList.remove("selected"); });
         node.classList.add("selected");
         var parts = node.getAttribute("data-node").split("|");
