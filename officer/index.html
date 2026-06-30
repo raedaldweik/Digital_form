@@ -48,7 +48,7 @@
           <div class="stats">
             <div class="stat glass"><div class="n" id="kpi-total">0</div><div class="l">إجمالي الطلبات</div></div>
             <div class="stat glass"><div class="n red" id="kpi-high">0</div><div class="l">مخاطر عالية</div></div>
-            <div class="stat glass"><div class="n amber" id="kpi-inv">0</div><div class="l">قيد التحقيق</div></div>
+            <div class="stat glass"><div class="n amber" id="kpi-inv">0</div><div class="l">محوّلة للتحقيق</div></div>
           </div>
 
           <!-- search -->
@@ -104,29 +104,6 @@
       <div class="scroll" id="detail-body" style="padding-top:14px;"></div>
     </section>
 
-    <!-- ============ INVESTIGATOR (list) ============ -->
-    <section class="screen" id="screen-investigator">
-      <div class="scroll">
-        <div class="page-h"><h1>المحقّق</h1><p>القضايا المحوّلة للتحقيق — تحليل الكيانات والعلاقات</p></div>
-        <div class="vi-banner glass">
-          <span class="vi-logo">VI</span>
-          <div><b>محقّق المنافذ الذكية</b><span>تحليل بصري للكيانات والشبكات</span></div>
-        </div>
-        <div class="tasklist" id="investigator-list"></div>
-      </div>
-    </section>
-
-    <!-- ============ INVESTIGATOR DETAIL (rendered by JS) ============ -->
-    <section class="screen" id="screen-case">
-      <div class="detail-bar">
-        <button class="back-btn" data-tab="screen-investigator" aria-label="رجوع">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-        <h2 id="case-title">التحقيق</h2>
-      </div>
-      <div class="scroll" id="case-body" style="padding-top:14px;"></div>
-    </section>
-
     <!-- ============ PROFILE ============ -->
     <section class="screen" id="screen-profile">
       <div class="scroll">
@@ -158,10 +135,6 @@
       <button class="tab" data-tab="screen-applicants">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="3.2"/><circle cx="12" cy="12" r="9"/></svg>
         الطلبات
-      </button>
-      <button class="tab" data-tab="screen-investigator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        المحقّق
       </button>
       <button class="tab" data-tab="screen-profile">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>

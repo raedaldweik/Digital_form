@@ -1,4 +1,7 @@
-/* ===== Kuwait Smart Border — Officer App (Arabic) ===== */
+/* ===== Kuwait Smart Border — Officer App (border officer) =====
+   The officer stops a car at the border, looks up the traveller by name or
+   scans the plate, double-checks the submitted declaration + risk score, then
+   either forwards the case to the Investigator or rejects it. */
 (function () {
   "use strict";
 
@@ -111,7 +114,6 @@
   function allApplicants() {
     var subs = loadSubmissions();
     var combined = subs.concat(SEED);
-    // de-dup by ref (submissions win)
     var seen = {}, out = [];
     combined.forEach(function (r) { if (r.ref && !seen[r.ref]) { seen[r.ref] = 1; out.push(normalize(r)); } });
     return out;
@@ -138,7 +140,8 @@
   var flagIc = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>';
 
   function statusTag(a) {
-    if (a.status === "investigator") return '<span class="newtag" style="background:#d9870a">قيد التحقيق</span>';
+    if (a.status === "investigator") return '<span class="newtag" style="background:#d9870a">محوّل للتحقيق</span>';
+    if (a.status === "approved") return '<span class="newtag" style="background:#0a9d57">معتمد</span>';
     if (a.status === "rejected") return '<span class="newtag" style="background:#df3a2f">مرفوض</span>';
     if (a.isNew) return '<span class="newtag">جديد</span>';
     return "";
@@ -221,8 +224,17 @@
 
     var statusBanner = a.status === "investigator"
       ? '<div class="state-banner amber">⚑ هذا الطلب محوّل حالياً إلى المحقّق</div>'
+      : a.status === "approved"
+      ? '<div class="state-banner" style="background:rgba(10,157,87,.12);color:#0a9d57;border:1px solid rgba(10,157,87,.3)">✓ اعتمد المحقّق هذا الطلب</div>'
       : a.status === "rejected"
       ? '<div class="state-banner red">✕ تم رفض هذا الطلب</div>' : "";
+
+    var actions = (a.status === "investigator" || a.status === "approved" || a.status === "rejected")
+      ? ""
+      : '<div class="actions">' +
+          '<button class="btn btn-flag" data-action="reject" data-ref="' + a.ref + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg> رفض</button>' +
+          '<button class="btn btn-invest" data-action="investigator" data-ref="' + a.ref + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg> تحويل إلى المحقّق</button>' +
+        '</div>';
 
     var html =
       statusBanner +
@@ -282,94 +294,9 @@
         a.factors.map(factorBar).join("") +
       '</div>' +
 
-      // ===== Actions =====
-      '<div class="actions">' +
-        '<button class="btn btn-flag" data-action="reject" data-ref="' + a.ref + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg> رفض</button>' +
-        '<button class="btn btn-invest" data-action="investigator" data-ref="' + a.ref + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg> تحويل إلى المحقّق</button>' +
-      '</div>';
+      actions;
 
     document.getElementById("detail-body").innerHTML = html;
-  }
-
-  /* ---------- INVESTIGATOR ---------- */
-  function renderInvestigator() {
-    var list = allApplicants().filter(function (a) { return a.status === "investigator"; });
-    document.getElementById("investigator-list").innerHTML =
-      list.length ? list.map(applicantCard).join("")
-        : '<p style="color:var(--muted);text-align:center;padding:30px">لا توجد قضايا قيد التحقيق.<br/>حوّل طلباً من شاشة التفاصيل ليظهر هنا.</p>';
-  }
-
-  // entity network graph (SAS Visual Investigator style) as an SVG
-  function networkGraph(a) {
-    var col = colorOf(a.level);
-    var W = 320, H = 280, cx = W / 2, cy = H / 2;
-    var nodes = [
-      { x: cx - 118, y: cy - 70, ic: "🚗", label: a.vehicleInfo.plate || "مركبة", cls: "veh" },
-      { x: cx + 118, y: cy - 70, ic: "🛂", label: a.traveler.passport || "جواز", cls: "doc" },
-      { x: cx - 130, y: cy + 60, ic: "📄", label: (a.wakala.type === "NonKuwait" ? "وكالة غير كويتية" : "وكالة كويتية"), cls: (a.wakala.type === "NonKuwait" ? "warn" : "ok") },
-      { x: cx + 130, y: cy + 60, ic: "🌍", label: ctry(a.travel.departure), cls: (["Iraq", "Syria", "Iran", "Yemen"].indexOf(a.travel.departure) >= 0 ? "warn" : "ok") },
-      { x: cx, y: cy + 108, ic: "🧾", label: a.ref, cls: "doc" }
-    ];
-    var lines = nodes.map(function (n) {
-      return '<line x1="' + cx + '" y1="' + cy + '" x2="' + n.x + '" y2="' + n.y + '" stroke="rgba(20,40,80,.18)" stroke-width="1.6"/>';
-    }).join("");
-    var nodeEls = nodes.map(function (n) {
-      return '<g class="vi-node vi-' + n.cls + '" style="transform:translate(' + n.x + 'px,' + n.y + 'px)">' +
-        '<circle r="22"/><text class="vi-ic" text-anchor="middle" dy="6">' + n.ic + '</text>' +
-        '<text class="vi-lbl" text-anchor="middle" dy="38">' + n.label + '</text></g>';
-    }).join("");
-    var center = '<g style="transform:translate(' + cx + 'px,' + cy + 'px)">' +
-      '<circle r="30" fill="' + col + '" opacity=".18"/>' +
-      '<circle r="26" fill="' + col + '"/>' +
-      '<text text-anchor="middle" dy="6" font-size="20">👤</text>' +
-      '<text class="vi-lbl" text-anchor="middle" dy="46" style="font-weight:800">' + a.driver + '</text></g>';
-    return '<svg class="vi-graph" viewBox="0 0 ' + W + ' ' + H + '" width="100%">' + lines + nodeEls + center + '</svg>';
-  }
-
-  function renderCase(a) {
-    document.getElementById("case-title").textContent = "تحقيق · " + a.plate;
-    var col = colorOf(a.level);
-    var active = a.factors.filter(function (x) { return x.active; });
-
-    var timeline = [
-      { t: "الآن", txt: "تم تحويل القضية إلى المحقّق من قبل الضابط" },
-      { t: "−" + Math.max(1, Math.round((Date.now() - (a.submittedAt || Date.now())) / 60000)) + " د", txt: "تم استلام التصريح عبر منصة المنافذ الذكية" },
-      { t: "تقييم", txt: "محرّك المخاطر أعطى درجة " + a.score + " (" + levelAr(a.level) + ")" }
-    ];
-    if (a.wakala.type === "NonKuwait") timeline.push({ t: "تنبيه", txt: "الوكالة غير كويتية — يتطلب التحقق من المستندات" });
-    if (["Iraq", "Syria", "Iran", "Yemen"].indexOf(a.travel.departure) >= 0) timeline.push({ t: "تنبيه", txt: "بلد المغادرة ضمن قائمة المراقبة: " + ctry(a.travel.departure) });
-
-    var html =
-      '<div class="risk-hero glass-hi glass">' + ring(a.score, 96) +
-        '<div class="rh-tx"><div class="lvl" style="color:' + col + '">مخاطر ' + levelAr(a.level) + '</div>' +
-        '<div class="src"><span class="vi-logo sm">VI</span> محقّق المنافذ الذكية</div>' +
-        '<div class="src">' + a.driver + ' · ' + ctry(a.nat) + '</div></div></div>' +
-
-      '<div class="info-card glass"><h4>شبكة الكيانات والعلاقات</h4>' + networkGraph(a) +
-        '<p class="vi-cap">رسم بياني للعلاقات بين المسافر ومركبته ووثائقه ووكالته وبلد مغادرته.</p></div>' +
-
-      '<div class="info-card glass"><h4>الكيانات المرتبطة</h4>' +
-        kvRow("المسافر", a.driver) +
-        kvRow("المركبة", a.plate + " · " + a.vehicleText) +
-        kvRow("الجواز", a.traveler.passport || "—") +
-        kvRow("الوكالة", (a.wakala.number || "—") + (a.wakala.type === "NonKuwait" ? " (غير كويتية)" : " (كويتية)")) +
-        kvRow("بلد المغادرة", ctry(a.travel.departure)) +
-      '</div>' +
-
-      '<div class="info-card glass"><h4>مؤشرات الخطورة</h4>' +
-        (active.length ? active.map(function (x) { return '<div class="kv"><span class="k"><span style="color:' + (x.weight >= 20 ? "#df3a2f" : "#d9870a") + '">⚑</span> ' + x.name + '</span><span class="v" style="color:' + (x.weight >= 20 ? "#df3a2f" : "#d9870a") + '">+' + x.weight + '</span></div>'; }).join("") : '<p style="color:var(--muted);margin:0">لا توجد مؤشرات نشطة.</p>') +
-      '</div>' +
-
-      '<div class="info-card glass"><h4>الخط الزمني</h4><div class="vi-timeline">' +
-        timeline.map(function (e) { return '<div class="vi-ev"><span class="vi-dot"></span><div><b>' + e.t + '</b><p>' + e.txt + '</p></div></div>'; }).join("") +
-      '</div></div>' +
-
-      '<div class="actions">' +
-        '<button class="btn btn-clear" data-action="close" data-ref="' + a.ref + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> إغلاق التحقيق</button>' +
-        '<button class="btn btn-flag" data-action="reject" data-ref="' + a.ref + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg> رفض</button>' +
-      '</div>';
-
-    document.getElementById("case-body").innerHTML = html;
   }
 
   /* ---------- PROFILE counts ---------- */
@@ -398,7 +325,7 @@
     var scroll = el && el.querySelector(".scroll");
     if (scroll) { scroll.classList.add("fade-in"); setTimeout(function () { scroll.classList.remove("fade-in"); }, 360); }
     var bar = document.getElementById("tabbar");
-    bar.classList.toggle("hidden", id === "screen-detail" || id === "screen-case");
+    bar.classList.toggle("hidden", id === "screen-detail");
     var sb = document.querySelector(".statusbar");
     if (sb) sb.classList.toggle("sb-light", id === "screen-home");
     document.querySelectorAll(".tab").forEach(function (b) { b.classList.toggle("is-active", b.getAttribute("data-tab") === id); });
@@ -414,19 +341,21 @@
     if (act) {
       var ref = act.getAttribute("data-ref");
       var action = act.getAttribute("data-action");
-      if (action === "investigator") { setDecision(ref, "investigator"); refresh(); show("screen-investigator"); }
-      else if (action === "reject") { setDecision(ref, "rejected"); refresh(); show("screen-applicants"); }
-      else if (action === "close") { setDecision(ref, "closed"); refresh(); show("screen-investigator"); }
+      if (action === "investigator" || action === "reject") {
+        setDecision(ref, action === "investigator" ? "investigator" : "rejected");
+        refresh();
+        var ok = action === "investigator";
+        var holder = act.closest(".actions");
+        if (holder) holder.outerHTML = '<div class="state-banner ' + (ok ? "amber" : "red") + '" style="margin-top:4px">' +
+          (ok ? "✓ تم تحويل الطلب إلى المحقّق" : "✕ تم رفض الطلب") + '</div>';
+      }
       return;
     }
 
     var card = e.target.closest("[data-ref]");
     if (card && !card.hasAttribute("data-action")) {
       var a = byRef(card.getAttribute("data-ref"));
-      if (a) {
-        if (a.status === "investigator") { renderCase(a); show("screen-case"); }
-        else { renderDetail(a); show("screen-detail"); }
-      }
+      if (a) { renderDetail(a); show("screen-detail"); }
       return;
     }
 
@@ -474,19 +403,17 @@
     if (!el) return;
     el.addEventListener("input", function () {
       searchTerm = el.value.trim();
-      // mirror across the search boxes
       ["search-name", "search-plate", "search-all"].forEach(function (oid) {
         if (oid !== id) { var o = document.getElementById(oid); if (o && o.value !== searchTerm) o.value = searchTerm; }
       });
       renderApplicants();
-      if (document.getElementById("screen-applicants") && !document.getElementById("screen-applicants").classList.contains("is-active") && searchTerm) {
-        show("screen-applicants");
-      }
+      var appScreen = document.getElementById("screen-applicants");
+      if (appScreen && !appScreen.classList.contains("is-active") && searchTerm) show("screen-applicants");
     });
   }
 
   /* ---------- init / refresh ---------- */
-  function refresh() { renderHome(); renderApplicants(); renderInvestigator(); renderProfile(); }
+  function refresh() { renderHome(); renderApplicants(); renderProfile(); }
   refresh();
   wireSearch("search-name");
   wireSearch("search-plate");
