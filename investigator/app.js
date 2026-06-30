@@ -457,18 +457,55 @@
         '<rect x="220" y="150" width="22" height="12" rx="4" fill="#0d1117"/>' +
       '</g></svg>';
   }
+  function platePlaceholder(plate) {
+    return '<div class="plate-cap"><div class="kwplate"><span class="kwp-strip">الكويت<br/>KWT</span><span class="kwp-num">' + plate + '</span></div>' +
+      '<div class="plate-note">بانتظار صورة المركبة الفعلية من كاميرا المنفذ</div></div>';
+  }
   function vehiclePanel(a) {
     var plate = a.vehicleInfo.plate || "—";
     return '<div class="xray-wrap"><div class="info-card glass" style="padding:14px"><h4>صورة المركبة عند المنفذ</h4>' +
-      '<div class="veh-photo">' + carSVG(plate, a.vehicleInfo.color) + '<span class="veh-tag">📷 كاميرا المنفذ · لقطة (عينة)</span></div>' +
+      '<div class="veh-photo">' +
+        '<img class="veh-img" src="../assets/vehicle_sample.jpg" alt="" onerror="this.parentNode.classList.add(\'no-img\')" />' +
+        '<div class="veh-ph">' + platePlaceholder(plate) + '</div>' +
+        '<span class="veh-tag">📷 كاميرا المنفذ (ANPR)</span>' +
+      '</div>' +
       '<div class="veh-plate-row"><span>رقم اللوحة المُلتقط</span><b>' + a.plate + '</b></div>' +
-      '<p style="margin:9px 2px 0;font-size:11.5px;color:var(--muted)">صورة توضيحية — تُستبدل بصورة الكاميرا أو الماسح الفعلية لاحقاً.</p>' +
       '</div></div>';
   }
-  function docBlock(label, dataUrl, fallback) {
+  function docBlock(label, dataUrl, fallback, status) {
     var src = dataUrl || fallback;
-    if (src) return '<div class="doc" data-img="' + src + '"><img src="' + src + '" alt="' + label + '" /><span>' + label + '</span></div>';
-    return '<div class="doc doc-empty"><span class="doc-ph">لم يُرفق</span><span>' + label + '</span></div>';
+    var pill = status ? '<span class="doc-val ' + status.cls + '">' + status.text + '</span>' : "";
+    if (src) return '<div class="doc" data-img="' + src + '"><img src="' + src + '" alt="' + label + '" />' + pill + '<span>' + label + '</span></div>';
+    return '<div class="doc doc-empty">' + pill + '<span class="doc-ph">لم يُرفق</span><span>' + label + '</span></div>';
+  }
+  // simulated document-verification model (maps to real verification services later)
+  function validation(a) {
+    return {
+      watch: ["Syria", "Iran", "Yemen"].indexOf(a.nat) >= 0,
+      regOut: !!(a.vehicleInfo.regcountry && a.vehicleInfo.regcountry !== "Kuwait"),
+      insExpired: (a.vehicleInfo.regcountry && a.vehicleInfo.regcountry !== "Kuwait") || a.level === "High",
+      restricted: a.travel.restricted === "Yes"
+    };
+  }
+  function vrow(name, state, detail) {
+    var ic = state === "ok" ? "✓" : state === "warn" ? "!" : "✕";
+    var lbl = state === "ok" ? "موثّق" : state === "warn" ? "يتطلب مراجعة" : "غير صالح";
+    return '<div class="val-row"><span class="val-ic ' + state + '">' + ic + '</span>' +
+      '<div class="val-tx"><b>' + name + '</b><span>' + detail + '</span></div>' +
+      '<span class="val-pill ' + state + '">' + lbl + '</span></div>';
+  }
+  function valRows(a) {
+    var v = validation(a);
+    return '<div class="val-grp">جواز السفر</div>' +
+      vrow("صلاحية الجواز", "ok", "غير منتهٍ · رمز MRZ مطابق") +
+      vrow("قوائم المراقبة", v.watch ? "warn" : "ok", v.watch ? "الجنسية ضمن قائمة مراقبة — يتطلب تحققاً" : "لا يوجد تطابق") +
+      '<div class="val-grp">دفتر السيارة (المركبة)</div>' +
+      vrow("رخصة التسجيل", "ok", "سارية · مطابقة لبيانات المركبة") +
+      vrow("وثيقة التأمين", v.insExpired ? "bad" : "ok", v.insExpired ? "منتهية أو غير مُتحقَّق منها" : "سارية المفعول") +
+      vrow("مطابقة رقم اللوحة", "ok", "يطابق اللوحة المُلتقطة بالكاميرا") +
+      vrow("مطابقة رقم الهيكل (VIN)", v.regOut ? "warn" : "ok", v.regOut ? "مركبة مسجّلة خارج الكويت — يتطلب تحققاً" : "مطابق للسجل الوطني") +
+      '<div class="val-grp">البيان الجمركي</div>' +
+      vrow("مطابقة البيان", v.restricted ? "warn" : "ok", v.restricted ? "بنود مقيّدة تتطلب فحصاً مادياً" : "مطابق لبيانات الشحنة");
   }
 
   /* ============================ CASE DETAIL ============================ */
@@ -539,11 +576,12 @@
       var wak = '<div class="info-card glass"><h4>الوكالة</h4>' +
         '<div class="kv"><span class="k">نوع الوكالة</span><span class="v ' + (w.type === "NonKuwait" ? "amber" : "green") + '">' + (w.type === "NonKuwait" ? "وكالة غير كويتية" : "وكالة كويتية") + '</span></div>' +
         kvRow("رقم / اسم الوكالة", w.number || "—") + '</div>';
-      var docs = '<div class="info-card glass"><h4>المستندات المرفقة</h4><div class="docs">' +
-        docBlock("جواز السفر", a.documents.passport, null) +
-        docBlock("دفتر السيارة", a.documents.daftar, null) +
-        docBlock("البيان الجمركي", a.documents.declaration, "../assets/decleration.jpeg") +
-      '</div></div>';
+      var vv = validation(a);
+      var docs = '<div class="info-card glass"><h4>المستندات والتحقق منها</h4><div class="docs">' +
+        docBlock("جواز السفر", a.documents.passport, null, vv.watch ? { cls: "warn", text: "مراجعة" } : { cls: "ok", text: "موثّق" }) +
+        docBlock("دفتر السيارة", a.documents.daftar, null, vv.insExpired ? { cls: "bad", text: "تأمين منتهٍ" } : { cls: "ok", text: "موثّق" }) +
+        docBlock("البيان الجمركي", a.documents.declaration, "../assets/decleration.jpeg", vv.restricted ? { cls: "warn", text: "فحص" } : { cls: "ok", text: "مطابق" }) +
+      '</div>' + valRows(a) + '</div>';
       return cons + person + veh + wak + mapPanel(a) + vehiclePanel(a) + docs +
         '<div class="info-card glass" id="net-case">' + networkInner(a, "case") + '</div>';
     }

@@ -581,3 +581,38 @@ body::after {
 .acc-u { font-weight: 700; color: var(--ink-2); font-family: "Inter", sans-serif; }
 .acc-a { color: var(--ink); }
 .acc-t { color: var(--muted); text-align: left; }
+
+/* ----- document status pill on thumbnails ----- */
+.doc { position: relative; }
+.doc-val { position: absolute; top: 8px; inset-inline-start: 8px; z-index: 2; font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px; backdrop-filter: blur(4px); }
+.doc-val.ok { background: rgba(10,157,87,.92); color: #fff; }
+.doc-val.warn { background: rgba(217,135,10,.92); color: #fff; }
+.doc-val.bad { background: rgba(223,58,47,.92); color: #fff; }
+
+/* ----- document validation rows ----- */
+.val-grp { font-size: 11px; font-weight: 800; color: var(--faint); letter-spacing: .5px; margin: 14px 0 4px; padding-top: 12px; border-top: 1px solid var(--line); }
+.val-grp:first-of-type { border-top: none; padding-top: 4px; margin-top: 6px; }
+.val-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; }
+.val-ic { width: 26px; height: 26px; border-radius: 8px; flex: none; display: grid; place-items: center; font-size: 14px; font-weight: 800; }
+.val-ic.ok { background: rgba(10,157,87,.14); color: var(--green); }
+.val-ic.warn { background: rgba(217,135,10,.14); color: var(--amber); }
+.val-ic.bad { background: rgba(223,58,47,.14); color: var(--red); }
+.val-tx { flex: 1; min-width: 0; }
+.val-tx b { display: block; font-size: 13px; font-weight: 700; color: var(--ink); }
+.val-tx span { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+.val-pill { flex: none; font-size: 10px; font-weight: 800; padding: 4px 9px; border-radius: 999px; }
+.val-pill.ok { background: rgba(10,157,87,.12); color: var(--green); border: 1px solid rgba(10,157,87,.3); }
+.val-pill.warn { background: rgba(217,135,10,.12); color: var(--amber); border: 1px solid rgba(217,135,10,.3); }
+.val-pill.bad { background: rgba(223,58,47,.12); color: var(--red); border: 1px solid rgba(223,58,47,.3); }
+
+/* ----- vehicle photo: real image with clean ANPR fallback ----- */
+.veh-photo { background: #11161f; }
+.veh-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.veh-photo.no-img .veh-img { display: none; }
+.veh-ph { display: none; position: absolute; inset: 0; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 38%, #1c2430, #0d1117); }
+.veh-photo.no-img .veh-ph { display: flex; }
+.plate-cap { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px; }
+.kwplate { display: inline-flex; align-items: center; gap: 10px; background: #fff; border: 2px solid #c9d0da; border-radius: 8px; padding: 8px 14px; box-shadow: 0 6px 18px rgba(0,0,0,.45); }
+.kwp-strip { font-size: 8px; font-weight: 800; color: #0a7d3a; line-height: 1.05; text-align: center; border-inline-end: 1px solid #d0d5dd; padding-inline-end: 9px; }
+.kwp-num { font-size: 24px; font-weight: 800; color: #15202e; letter-spacing: 2px; font-family: "Inter", sans-serif; }
+.plate-note { font-size: 11.5px; color: #9fb0c4; text-align: center; }
