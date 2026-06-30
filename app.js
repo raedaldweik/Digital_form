@@ -212,7 +212,7 @@
       if (!file) return;
       up.classList.add("is-busy"); up.classList.remove("is-done");
       up.querySelector(".up-inner").innerHTML =
-        '<span class="up-spin"></span><div class="up-tx"><b>' + t("upload.reading") + '</b></div>';
+        '<div class="up-head"><span class="up-spin"></span><div class="up-tx"><b>' + t("upload.reading") + '</b></div></div>';
 
       compressImage(file, 1100, function (dataUrl) {
         state.documents[docType] = dataUrl;
@@ -226,10 +226,12 @@
           if (docType === "passport") autofillPassport(sample); else autofillDaftar(sample);
           up.classList.remove("is-busy"); up.classList.add("is-done");
           up.querySelector(".up-inner").innerHTML =
+            '<div class="up-head">' +
             '<span class="up-thumb"><img src="' + dataUrl + '" alt=""/></span>' +
             '<div class="up-tx"><b class="up-ok">✓ ' + t("upload.done") + '</b>' +
             '<small>' + (file.name || "") + '</small></div>' +
-            '<button type="button" class="up-change">' + t("upload.change") + '</button>';
+            '<button type="button" class="up-change">' + t("upload.change") + '</button>' +
+            '</div>';
         }, 1400);
       });
     });
