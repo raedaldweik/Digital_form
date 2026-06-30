@@ -338,8 +338,13 @@ body {
 }
 /* vibrant official skyline + emblems, full-bleed across the top */
 .wc-photo {
-  position: absolute; top: 0; left: 0; right: 0; height: 70%; z-index: 0;
-  background: url("assets/welcome_bg.png") center top / 100% auto no-repeat;
+  position: absolute; top: 0; left: 0; right: 0; height: 72%; z-index: 0;
+  background: url("assets/welcome_bg.png") no-repeat;
+  /* push the baked-in emblems down so they clear the dynamic island,
+     and fill the exposed strip with the photo's own sky colour */
+  background-size: 100% auto;
+  background-position: center calc(46px + env(safe-area-inset-top, 0px));
+  background-color: #b8bee5;
 }
 /* fade the photo into the deep-navy content area below */
 .wc-photo::after {
