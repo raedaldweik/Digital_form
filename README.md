@@ -1,17 +1,28 @@
 # Kuwait Smart Border Declaration (Customs)
 
-A digital customs declaration built as two responsive, phone-style web apps:
+A digital customs declaration built as **three** responsive, phone-style web apps —
+one per persona:
 
-1. **User app** (`index.html`) — the traveller in the car fills in their information,
+1. **Traveller app** (`index.html`) — the person in the car fills in their information,
    uploads their documents, and submits the declaration to Kuwait Customs.
-2. **Officer app** (`officer/index.html`) — the customs officer reviews every
-   applicant, sees all submitted answers + documents and a risk score, and either
-   **moves the case to the investigator** or **rejects** it.
-3. **Investigator screen** (inside the officer app) — a SAS Visual Investigator–style
-   mobile view: entity-relationship network, related entities, risk indicators and a
-   case timeline.
+2. **Officer app** (`officer/index.html`) — the officer **at the border** looks the
+   traveller up by name or scans the plate, double-checks the submitted declaration +
+   risk score, then **forwards the case to the investigator** or **rejects** it.
+3. **Investigator app** (`investigator/index.html`) — a full **SAS Visual Investigator**
+   experience on a phone for the customs intelligence investigator, who has the **final
+   say (approve / reject)**: an alert-triage queue, a scorecard with named scenario
+   sub-scores (C1…C9), a link-analysis network with entity resolution, a goods/vehicle
+   map, an x-ray/scan panel, triggers, score & alert history, source record, and an
+   investigation assistant.
 
-Everything is **Arabic-first (RTL)**, with an English toggle on the welcome screen.
+Everything is **Arabic-first (RTL)**. Data flows between the apps via shared
+`localStorage`: `ksb_submissions` (full declarations + documents), `ksb_decisions`
+(`investigator` / `approved` / `rejected`), and `ksb_history` (alert audit log).
+
+The investigator app's data model and disposition flow mirror the SAS VI REST APIs
+(`svi-alert`, `svi-datahub`, `svi-sand`, `workflows`, `svi-transport`) so it can be
+wired to a live SAS Viya / Visual Investigator backend later — see the mapping table in
+`investigator/app.js`.
 
 ## User app flow
 

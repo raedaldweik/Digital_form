@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1024" />
+  <title>المنافذ الذكية — تطبيق المحقّق</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- iOS status bar -->
+    <div class="statusbar sb-light">
+      <span class="sb-time">9:41</span>
+      <span class="sb-right">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0.5" width="3" height="11.5" rx="1"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 3.2c2.3 0 4.4.9 6 2.4l1.4-1.5A11 11 0 0 0 8.5 1 11 11 0 0 0 1.1 4.1L2.5 5.6a8.7 8.7 0 0 1 6-2.4z"/><path d="M8.5 6.6c1.3 0 2.6.5 3.5 1.5l1.5-1.5a7 7 0 0 0-10 0L5 8.1c1-1 2.2-1.5 3.5-1.5z"/><circle cx="8.5" cy="10.4" r="1.6"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" stroke-opacity=".45"/><rect x="2" y="2" width="18" height="9" rx="2" fill="currentColor"/><rect x="24" y="4" width="2" height="5" rx="1" fill="currentColor" fill-opacity=".45"/></svg>
+      </span>
+    </div>
+
+    <!-- ============ HOME / DASHBOARD ============ -->
+    <section class="screen is-active" id="screen-home">
+      <div class="scroll home-scroll">
+        <div class="home-hero">
+          <div class="hero-bg"><img src="../assets/welcome_bg.png" alt="" /></div>
+          <div class="hh-top">
+            <img class="brand-emblem" src="../assets/logo_emblem.png" alt="دولة الكويت" />
+            <div class="brand-txt"><b>دولة الكويت</b><span>الإدارة العامة للجمارك</span></div>
+            <div class="topbar-spacer"></div>
+            <span class="vi-logo">VI</span>
+          </div>
+          <h2 class="hh-title">مركز التحقيق</h2>
+          <div class="hh-sub">تطبيق المحقّق · محقّق المنافذ الذكية</div>
+          <div class="officer-chip">
+            <span class="avatar">م.أ</span>
+            <div><b>المحقّق منصور الأحمد</b><span> · شارة 9012</span></div>
+          </div>
+        </div>
+
+        <div class="sheet" id="home-sheet"><!-- rendered by JS --></div>
+      </div>
+    </section>
+
+    <!-- ============ ALERTS TRIAGE QUEUE ============ -->
+    <section class="screen" id="screen-alerts">
+      <div class="scroll">
+        <div class="page-h"><h1>التنبيهات</h1><p>قائمة انتظار التحقيق — مرتّبة حسب النقاط</p></div>
+        <div class="search-row glass solo-search">
+          <span class="search-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+          <input type="text" id="search-all" placeholder="ابحث بالاسم أو رقم الشحنة أو المركبة…" autocomplete="off" />
+        </div>
+        <div class="filters" id="strategy-filters">
+          <button class="fchip is-active" data-filter="all">الكل</button>
+          <button class="fchip" data-filter="Customs">جمارك</button>
+          <button class="fchip" data-filter="Air">جوي</button>
+        </div>
+        <div class="tasklist" id="alert-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ NETWORK EXPLORER ============ -->
+    <section class="screen" id="screen-network">
+      <div class="scroll">
+        <div class="page-h"><h1>الشبكة</h1><p>تحليل الكيانات والعلاقات عبر القضايا</p></div>
+        <div class="vi-banner glass">
+          <span class="vi-logo">VI</span>
+          <div><b>تحليل الشبكة</b><span>كشف الكيانات المشتركة (Entity Resolution)</span></div>
+        </div>
+        <div class="info-card glass" id="net-global"><!-- rendered by JS --></div>
+      </div>
+    </section>
+
+    <!-- ============ CASE / ALERT DETAIL (rendered by JS) ============ -->
+    <section class="screen" id="screen-detail">
+      <div class="detail-bar">
+        <button class="back-btn" data-tab="screen-alerts" aria-label="رجوع">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <h2 id="detail-title">التنبيه</h2>
+      </div>
+      <div class="scroll" id="detail-body" style="padding-top:14px;"></div>
+    </section>
+
+    <!-- ============ PROFILE ============ -->
+    <section class="screen" id="screen-profile">
+      <div class="scroll">
+        <div class="page-h"><h1>الملف الشخصي</h1></div>
+        <div class="profile-card glass">
+          <span class="avatar">م.أ</span>
+          <h2>المحقّق منصور الأحمد</h2>
+          <div class="role">محقّق جمارك · شارة 9012 · إدارة الاستخبارات الجمركية</div>
+          <div class="profile-stats">
+            <div><div class="n" id="prof-seen">0</div><div class="l">تمت دراستها</div></div>
+            <div><div class="n" id="prof-app">0</div><div class="l">معتمد</div></div>
+            <div><div class="n" id="prof-rej">0</div><div class="l">مرفوض</div></div>
+          </div>
+        </div>
+        <div class="settings glass">
+          <div class="set-row"><span class="sic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#28354f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2.3-1.3L13.6 2h-3.2l-.4 2.5A7 7 0 0 0 7.7 5.8l-2.3-1-2 3.4 2 1.5A7 7 0 0 0 5.3 12c0 .4 0 .9.1 1.3l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2.3 1.3l.4 2.5h3.2l.4-2.5a7 7 0 0 0 2.3-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span><span class="st">إعدادات المحقّق</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+          <div class="set-row"><span class="sic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#28354f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7z"/></svg></span><span class="st">الصلاحيات والوصول</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+          <div class="set-row" id="reset-demo"><span class="sic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#28354f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span><span class="st">إعادة تعيين البيانات التجريبية</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TAB BAR ============ -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tab is-active" data-tab="screen-home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        الرئيسية
+      </button>
+      <button class="tab" data-tab="screen-alerts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        التنبيهات
+      </button>
+      <button class="tab" data-tab="screen-network">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2.4"/><circle cx="19" cy="7" r="2.4"/><circle cx="12" cy="17" r="2.6"/><path d="M7 7l4 8M17 8l-4 7"/></svg>
+        الشبكة
+      </button>
+      <button class="tab" data-tab="screen-profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+        الملف
+      </button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

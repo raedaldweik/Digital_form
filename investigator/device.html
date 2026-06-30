@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المنافذ الذكية — المحقّق</title>
+  <style>
+    :root { --bezel: #0a0a0c; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      min-height: 100vh;
+      background: #0a0c14;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .stage { transform-origin: center center; }
+    .phone {
+      position: relative;
+      width: 393px;
+      height: 852px;
+      background: var(--bezel);
+      border-radius: 58px;
+      padding: 14px;
+      box-shadow:
+        0 0 0 2px #2a2d33,
+        0 0 0 6px #0a0a0c,
+        0 40px 80px rgba(0,0,0,.55),
+        inset 0 0 4px rgba(255,255,255,.08);
+    }
+    .phone__screen {
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: 46px;
+      overflow: hidden;
+      background: #000;
+    }
+    .phone__screen iframe {
+      width: 100%; height: 100%; border: 0; display: block;
+      background: #eef3fb;
+    }
+    .phone__island {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 112px; height: 33px; background: #000; border-radius: 20px; z-index: 10;
+      pointer-events: none;
+    }
+    .phone::before {
+      content: ""; position: absolute; left: -3px; top: 130px; width: 3px; height: 32px;
+      border-radius: 3px 0 0 3px; background: #15171b;
+      box-shadow: 0 50px 0 #15171b, 0 110px 0 #15171b;
+    }
+    .phone__power { position: absolute; right: -3px; top: 170px; width: 3px; height: 90px; background: #15171b; border-radius: 0 3px 3px 0; }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <div class="phone">
+      <span class="phone__power"></span>
+      <div class="phone__screen">
+        <div class="phone__island"></div>
+        <iframe src="index.html" title="Investigator app preview"></iframe>
+      </div>
+    </div>
+  </div>
+  <script>
+    var stage = document.getElementById('stage');
+    function fit() {
+      var scale = Math.min(
+        (window.innerWidth  - 40) / 405,
+        (window.innerHeight - 40) / 864,
+        1
+      );
+      stage.style.transform = 'scale(' + scale + ')';
+    }
+    window.addEventListener('resize', fit);
+    fit();
+  </script>
+</body>
+</html>
