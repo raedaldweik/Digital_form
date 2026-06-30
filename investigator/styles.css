@@ -542,10 +542,12 @@ body::after {
 .hero-photo { position: relative; background: #b9bfe4; padding-top: calc(32px + env(safe-area-inset-top, 0px)); font-size: 0; }
 .hero-img { display: block; width: 100%; height: auto; }
 .hero-fade {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 66%;
-  background: linear-gradient(180deg, rgba(14,42,82,0) 0%, rgba(14,42,82,.5) 42%, rgba(14,42,82,.9) 72%, #0e2a52 100%);
+  position: absolute; left: 0; right: 0; bottom: 0; height: 76%;
+  background: linear-gradient(180deg, rgba(14,42,82,0) 0%, rgba(14,42,82,.42) 32%, rgba(14,42,82,.86) 56%, #0e2a52 80%);
 }
-.home-hero .hero-content { position: relative; z-index: 2; margin-top: -24%; padding: 0 22px 18px; }
+.home-hero .hero-content { position: relative; z-index: 2; margin-top: -40%; padding: 0 22px 54px; }
+.home-hero .hh-title { margin-top: 4px; }
+.home-hero .officer-chip { margin-top: 14px; }
 .home-hero .hero-content .hh-top { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
 
 /* ----- tappable (linkable) network nodes ----- */
