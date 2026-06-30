@@ -377,12 +377,23 @@
       '<p class="vi-cap">' + cap + '</p></div>';
   }
   function paintNet(key) { var host = document.getElementById("net-" + key); if (host && netA[key]) host.innerHTML = networkInner(netA[key], key); }
-  function renderNetwork() {
-    // global explorer: pick the highest-scoring consignment case
-    var cl = caseload().slice().sort(function (x, y) { return y.total - x.total; });
-    netA.global = cl[0] || allApplicants()[0];
-    document.getElementById("net-global").innerHTML = netA.global ? networkInner(netA.global, "global") : '<p style="color:var(--muted);text-align:center;padding:20px">لا توجد بيانات.</p>';
+  function findEntity(q) {
+    q = q.toLowerCase();
+    return allApplicants().filter(function (a) {
+      var c = a.consignment;
+      var hay = (a.driver + " " + a.plate + " " + a.ref + " " + (a.traveler.passport || "") + " " +
+        (c ? (c.id + " " + c.ref + " " + c.consignor + " " + c.consignee + " " + c.consigneeTIN) : "")).toLowerCase();
+      return hay.indexOf(q) >= 0;
+    })[0];
   }
+  function renderGlobalNet() {
+    var host = document.getElementById("net-global");
+    host.innerHTML = netA.global ? networkInner(netA.global, "global") : '<p style="color:var(--muted);text-align:center;padding:20px">لا توجد بيانات.</p>';
+    var res = document.getElementById("net-result");
+    if (res) res.innerHTML = netA.global ? ('مركز الشبكة: <b>' + (netA.global.consignment ? ("شحنة " + netA.global.consignment.id) : netA.global.driver) + '</b> · ' + netA.global.plate) : "";
+  }
+  function topCase() { var cl = caseload().slice().sort(function (x, y) { return y.total - x.total; }); return cl[0] || allApplicants()[0]; }
+  function renderNetwork() { if (!netA.global) netA.global = topCase(); renderGlobalNet(); }
 
   /* ============================ MAP / X-RAY / DOCS ============================ */
   function mapPanel(a) {
@@ -403,20 +414,42 @@
     return '<div class="map-panel glass">' + svg +
       '<div class="map-cap"><b>موقع البضائع:</b> ' + locType + ' · الرمز: KWPCW-03<br/>الإحداثيات: ' + lat + ' , ' + lng + '</div></div>';
   }
-  function xrayPanel(a) {
-    var anom = a.travel.restricted === "Yes" || (a.consignment && /كيميا/.test(a.consignment.goodsDesc || ""));
-    var sim = '<svg viewBox="0 0 320 200" preserveAspectRatio="none">' +
-      '<rect width="320" height="200" fill="#0b1026"/>' +
-      '<g opacity=".55" fill="none" stroke="#9fc6ff" stroke-width="1.4">' +
-        '<rect x="22" y="60" width="80" height="96" rx="4"/><rect x="36" y="78" width="52" height="60" rx="3"/>' +
-        '<rect x="120" y="48" width="74" height="110" rx="4"/><rect x="206" y="66" width="88" height="92" rx="4"/>' +
-        '<line x1="120" y1="100" x2="194" y2="100"/><line x1="157" y1="48" x2="157" y2="158"/>' +
-      '</g>' +
-      (anom ? '<g><ellipse cx="150" cy="108" rx="20" ry="14" fill="#ff7a59" opacity=".75"/><ellipse cx="58" cy="118" rx="12" ry="10" fill="#ffd166" opacity=".7"/></g>' : '<ellipse cx="250" cy="110" rx="14" ry="10" fill="#9fe0ff" opacity=".5"/>') +
-      '</svg>';
-    return '<div class="xray-wrap"><div class="info-card glass" style="padding:14px"><h4>الأشعة السينية</h4>' +
-      '<div class="xray-panel">' + sim + '<span class="scan-line"></span><span class="xray-tag">جهاز الفحص بالأشعة · صورة الحاوية</span></div>' +
-      (anom ? '<div class="xray-anom">⚠ كثافة غير متجانسة — يُوصى بالفحص المادي</div>' : '') +
+  function carSVG(plate, color) {
+    var colMap = { "White": "#eef2f7", "أبيض": "#eef2f7", "Black": "#2b313b", "أسود": "#2b313b", "Silver": "#ccd3dd", "فضي": "#ccd3dd", "Grey": "#99a2af", "رمادي": "#99a2af", "Red": "#cf463b", "أحمر": "#cf463b", "Blue": "#3a78c2" };
+    var body = colMap[color] || "#3a78c2", dark = "#20262f";
+    return '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice">' +
+      '<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3645"/><stop offset="1" stop-color="#1a212b"/></linearGradient></defs>' +
+      '<rect width="320" height="200" fill="url(#sky)"/>' +
+      '<rect y="152" width="320" height="48" fill="#161b22"/>' +
+      '<line x1="0" y1="184" x2="320" y2="184" stroke="#3a4655" stroke-width="3" stroke-dasharray="16 14"/>' +
+      '<ellipse cx="160" cy="160" rx="118" ry="14" fill="#000" opacity=".35"/>' +
+      '<g>' +
+        '<path d="M104 86 Q116 50 160 50 Q204 50 216 86 Z" fill="' + body + '"/>' +
+        '<path d="M122 84 Q132 63 160 63 Q188 63 198 84 Z" fill="#9fb6cf" opacity=".9"/>' +
+        '<line x1="150" y1="82" x2="139" y2="70" stroke="#5b6b7d" stroke-width="1.5"/>' +
+        '<line x1="170" y1="82" x2="181" y2="70" stroke="#5b6b7d" stroke-width="1.5"/>' +
+        '<rect x="74" y="84" width="172" height="72" rx="16" fill="' + body + '"/>' +
+        '<rect x="74" y="101" width="172" height="3" fill="rgba(0,0,0,.12)"/>' +
+        '<rect x="140" y="107" width="40" height="18" rx="4" fill="' + dark + '"/>' +
+        '<g stroke="#3a424d" stroke-width="1.6"><line x1="146" y1="111" x2="174" y2="111"/><line x1="146" y1="116" x2="174" y2="116"/><line x1="146" y1="121" x2="174" y2="121"/></g>' +
+        '<circle cx="160" cy="116" r="3.6" fill="#cfd6df"/>' +
+        '<path d="M86 97 q22 -6 34 2 l-2 11 q-18 -4 -32 0 Z" fill="#e6edf5"/>' +
+        '<path d="M234 97 q-22 -6 -34 2 l2 11 q18 -4 32 0 Z" fill="#e6edf5"/>' +
+        '<circle cx="100" cy="103" r="3.2" fill="#fff"/><circle cx="220" cy="103" r="3.2" fill="#fff"/>' +
+        '<rect x="70" y="134" width="180" height="22" rx="9" fill="' + dark + '"/>' +
+        '<rect x="116" y="135" width="88" height="20" rx="3" fill="#fff" stroke="#c7ccd4"/>' +
+        '<rect x="116" y="135" width="14" height="20" rx="3" fill="#0a7d3a"/>' +
+        '<text x="169" y="149" text-anchor="middle" font-size="11" font-weight="800" fill="#15202e" font-family="Inter,Arial">' + plate + '</text>' +
+        '<rect x="78" y="150" width="22" height="12" rx="4" fill="#0d1117"/>' +
+        '<rect x="220" y="150" width="22" height="12" rx="4" fill="#0d1117"/>' +
+      '</g></svg>';
+  }
+  function vehiclePanel(a) {
+    var plate = a.vehicleInfo.plate || "—";
+    return '<div class="xray-wrap"><div class="info-card glass" style="padding:14px"><h4>صورة المركبة عند المنفذ</h4>' +
+      '<div class="veh-photo">' + carSVG(plate, a.vehicleInfo.color) + '<span class="veh-tag">📷 كاميرا المنفذ · لقطة (عينة)</span></div>' +
+      '<div class="veh-plate-row"><span>رقم اللوحة المُلتقط</span><b>' + a.plate + '</b></div>' +
+      '<p style="margin:9px 2px 0;font-size:11.5px;color:var(--muted)">صورة توضيحية — تُستبدل بصورة الكاميرا أو الماسح الفعلية لاحقاً.</p>' +
       '</div></div>';
   }
   function docBlock(label, dataUrl, fallback) {
@@ -498,7 +531,7 @@
         docBlock("دفتر السيارة", a.documents.daftar, null) +
         docBlock("البيان الجمركي", a.documents.declaration, "../assets/decleration.jpeg") +
       '</div></div>';
-      return cons + person + veh + wak + mapPanel(a) + xrayPanel(a) + docs;
+      return cons + person + veh + wak + mapPanel(a) + vehiclePanel(a) + docs;
     }
     if (tab === "triggers") {
       if (!a.sc.scenarios.length) return '<p style="color:var(--muted);text-align:center;padding:24px">لا توجد محفزات.</p>';
@@ -687,6 +720,17 @@
   function refresh() { renderHome(); renderAlerts(); renderProfile(); }
   refresh();
   var sAll = document.getElementById("search-all"); if (sAll) wireSearch("search-all");
+  var ns = document.getElementById("net-search");
+  if (ns) ns.addEventListener("input", function () {
+    var q = ns.value.trim(); netExp.global = false;
+    if (!q) { netA.global = topCase(); renderGlobalNet(); return; }
+    var m = findEntity(q);
+    if (m) { netA.global = m; renderGlobalNet(); }
+    else {
+      document.getElementById("net-global").innerHTML = '<p style="color:var(--muted);text-align:center;padding:24px">لا توجد كيانات مطابقة.</p>';
+      document.getElementById("net-result").innerHTML = "";
+    }
+  });
   window.addEventListener("storage", function (e) { if (e.key === "ksb_submissions" || e.key === "ksb_decisions") refresh(); });
   document.addEventListener("visibilitychange", function () { if (!document.hidden) refresh(); });
 })();
