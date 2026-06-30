@@ -1,49 +1,66 @@
-# Kuwait Smart Border Declaration
+# Kuwait Smart Border Declaration (Customs)
 
-A digital travel declaration form, built as a responsive website that looks and works like the mobile mockups. Travelers enter their information, fill out a customs declaration, and receive a simulated border-clearance decision with a QR pass.
+A digital customs declaration built as two responsive, phone-style web apps:
 
-## Features
+1. **User app** (`index.html`) — the traveller in the car fills in their information,
+   uploads their documents, and submits the declaration to Kuwait Customs.
+2. **Officer app** (`officer/index.html`) — the customs officer reviews every
+   applicant, sees all submitted answers + documents and a risk score, and either
+   **moves the case to the investigator** or **rejects** it.
+3. **Investigator screen** (inside the officer app) — a SAS Visual Investigator–style
+   mobile view: entity-relationship network, related entities, risk indicators and a
+   case timeline.
 
-- **Welcome screen** — branding, feature highlights, and a language toggle.
-- **Step 1 — Traveler Information** — passport, name, nationality, date of birth, mobile, email (with scan/NFC placeholders).
-- **Step 2 — Travel Declaration** — purpose of visit, country of departure, previously visited countries, duration, items to declare, cash declaration, and customs questions.
-- **Decision screen** — simulated AI decision:
-  - **Approved for Automated Clearance** (Fast Track Lane) with a Border Clearance Pass QR, or
-  - **Additional Inspection Required** with an inspection counter and reference QR.
-- **Bilingual** — full **English / العربية** support with right-to-left layout for Arabic.
-- **Responsive** — phone-first layout that also looks good centered on desktop.
-- **Zero dependencies** — plain HTML, CSS, and JavaScript. Hosts anywhere.
+Everything is **Arabic-first (RTL)**, with an English toggle on the welcome screen.
 
-## How the decision works
+## User app flow
 
-The declaration is flagged for **inspection** if any of these are true; otherwise it is **approved**:
+- **Welcome** — government branding, language toggle, "ابدأ التصريح".
+- **Step 1 — Traveler info** — upload the **passport** photo to auto-fill (simulated
+  OCR) passport number, name, nationality and date of birth; remaining personal fields.
+- **Step 2 — Travel declaration** — purpose, country of departure, previous countries,
+  duration, items to declare, cash and the customs yes/no questions.
+- **Step 3 — Vehicle + Wakala** — upload the **car daftar (registration)** to auto-fill
+  plate, make/model, type and colour; plus the **Wakala** (agency) section with a
+  **Kuwaiti / non-Kuwaiti** toggle.
+- **Result** — neutral submission confirmation (assigned lane + crossing details).
+  **No QR code** — the officer reviews the case on their side.
 
-- "Restricted/prohibited goods" = Yes
-- "Commercial merchandise" = Yes
-- "Cash exceeding KWD 10,000" = Yes
-- Declared cash amount > 10,000 KWD
-- "Commercial Goods" checked in Items to Declare
+Submissions (including the uploaded document images) are passed to the officer app via
+shared `localStorage` (`ksb_submissions`).
+
+## Officer app
+
+- **Home** — KPIs (total / high-risk / under investigation), **search by name** and
+  **search by vehicle number** (with a "scan plate" option), and the latest applicants.
+- **Applicants** — the full list of everyone who applied, with filters and search.
+- **Applicant detail** — risk score + **every answer** from the form, the **attached
+  documents**, the risk-score breakdown, and **Move to Investigator / Reject** actions.
+- **Investigator** — cases moved by the officer, each opening into the entity-network
+  case view. Officer decisions persist in `localStorage` (`ksb_decisions`).
+
+## OCR / autofill
+
+Document upload currently **simulates** OCR extraction (it fills realistic sample
+fields after a short "reading" animation) and stores a compressed copy of the uploaded
+image so the officer can see it. Wire the uploader to a real OCR backend (or a
+client-side engine such as Tesseract.js) to read live document data.
 
 ## Running locally
 
-It's a static site — just open `index.html`, or serve the folder:
+Static site — open `index.html`, or serve the folder:
 
 ```bash
 python3 -m http.server 8000
-# then visit http://localhost:8000
+# user app:    http://localhost:8000/index.html   (framed: device.html)
+# officer app: http://localhost:8000/officer/      (framed: officer/device.html)
 ```
 
 ## File structure
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Markup for all screens (welcome, step 1, step 2, result, bottom nav) |
-| `styles.css` | All styling, responsive layout, and RTL rules |
-| `i18n.js` | English/Arabic translation strings and the shared country list |
-| `app.js` | Navigation, form handling, language switching, decision logic, QR rendering |
-
-## Notes / next steps
-
-- The QR code is a styled placeholder generated from the declaration reference. Swap in a real QR library to encode actual pass data.
-- "Scan Passport" and "Read Passport (NFC)" are UI placeholders.
-- No backend yet — submissions are processed entirely in the browser. Add an API to persist declarations and issue real clearance decisions.
+| `index.html` / `app.js` / `i18n.js` / `styles.css` | User app (welcome, steps 1–3, result) |
+| `officer/index.html` / `officer/app.js` / `officer/styles.css` | Officer + investigator app |
+| `device.html`, `officer/device.html` | iPhone-frame wrappers (load the apps in an iframe) |
+| `assets/` | Logos, emblems and background imagery |

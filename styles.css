@@ -15,7 +15,7 @@
   --green-tint: #e9f6ee;
   --radius: 16px;
   --shadow: 0 10px 30px rgba(20, 40, 70, .08);
-  --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font: "Cairo", "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -323,3 +323,94 @@ body {
   border-radius: 14px; -webkit-tap-highlight-color: transparent;
 }
 .ovl-hot:active { background: rgba(0,0,0,.06); }
+
+/* =====================================================================
+   NEW COMPONENTS — coded Arabic welcome, document uploader, wakala
+   ===================================================================== */
+
+/* ----- coded welcome screen ----- */
+.screen-welcome { background: #0c1c36; }
+.welcome-coded {
+  position: relative; width: 100%; min-height: 100vh;
+  display: flex; flex-direction: column; gap: 18px;
+  padding: calc(54px + env(safe-area-inset-top, 0px)) 22px 30px;
+  color: #fff; overflow-y: auto;
+  background:
+    radial-gradient(120% 90% at 50% -20%, #1b3f73 0%, #102a4f 45%, #0a1c38 100%);
+}
+.welcome-coded::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: url("assets/welcome_bg.png") center top / cover no-repeat;
+  opacity: .18; pointer-events: none;
+}
+.welcome-coded > * { position: relative; z-index: 1; }
+
+.lang-pill {
+  align-self: flex-start;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; border-radius: 999px; padding: 8px 18px; font-family: inherit;
+  font-size: 13px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px);
+}
+.lang-pill:active { background: rgba(255,255,255,.2); }
+
+.wc-emblems { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 4px; }
+.wc-emblem { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.wc-emblem img { height: 46px; width: auto; filter: drop-shadow(0 3px 8px rgba(0,0,0,.4)); }
+.wc-emblem span { font-size: 11px; font-weight: 700; opacity: .92; max-width: 110px; line-height: 1.3; }
+.wc-sep { width: 1px; height: 48px; background: rgba(255,255,255,.25); }
+
+.wc-hero { margin-top: 8px; text-align: center; }
+.wc-title { font-size: 26px; font-weight: 800; line-height: 1.35; margin: 0 0 6px; }
+.wc-title-en { font-size: 13px; letter-spacing: .4px; color: #8fc7a6; font-weight: 700; margin: 0 0 14px; }
+.wc-sub { font-size: 14px; line-height: 1.6; opacity: .9; margin: 0 auto 22px; max-width: 340px; }
+.wc-cta { font-size: 17px; }
+
+.wc-feats {
+  margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px; padding: 16px;
+}
+.wc-feat { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
+.wc-feat .wf-ic { font-size: 18px; }
+
+/* ----- document uploader / OCR ----- */
+.uploader {
+  background: linear-gradient(180deg, #f3f8ff 0%, #eaf2fb 100%);
+  border: 1.5px dashed #9db8da; border-radius: var(--radius);
+  padding: 16px; cursor: pointer; transition: border-color .15s, background .15s;
+}
+.uploader:active { background: #e4eefb; }
+.uploader.is-done { border-style: solid; border-color: var(--green); background: var(--green-tint); }
+.uploader.is-busy { border-color: var(--navy-2); }
+.up-inner { display: flex; align-items: center; gap: 14px; }
+.up-ic {
+  flex: none; width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center; background: var(--navy); color: #fff;
+}
+.up-tx { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.up-tx b { font-size: 14.5px; color: var(--navy); }
+.up-tx small { font-size: 11.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.up-ok { color: var(--green-deep) !important; }
+.up-cta {
+  flex: none; font-size: 11px; font-weight: 700; color: var(--navy-2);
+  background: #fff; border: 1px solid #cfe0f4; border-radius: 999px; padding: 7px 12px;
+}
+.up-thumb { flex: none; width: 46px; height: 46px; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+.up-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.up-change {
+  flex: none; font-size: 11px; font-weight: 700; color: var(--green-deep);
+  background: #fff; border: 1px solid #bfe3cd; border-radius: 999px; padding: 7px 12px; cursor: pointer; font-family: inherit;
+}
+.up-spin {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid #cdddef; border-top-color: var(--navy); animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ----- dial code chip inside mobile field ----- */
+.dialcode { flex: none; font-weight: 700; color: var(--ink); font-size: 14px; padding-inline-end: 8px; border-inline-end: 1px solid var(--line); }
+
+/* ----- wakala toggle (full width segmented) ----- */
+.wakala-card .card-note { margin-top: -4px; }
+.wakala-toggle { display: flex; width: 100%; }
+.wakala-toggle .yn { flex: 1; text-align: center; }
