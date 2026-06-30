@@ -422,16 +422,13 @@ body::after {
 .lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(6,14,26,.86); display: grid; place-items: center; padding: 24px; cursor: zoom-out; }
 .lightbox img { max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 
-/* ----- government emblem bar (full 3 official emblems, below the notch) ----- */
-.gov-bar {
-  background-color: #b9bfe4;
-  background-image: url("../assets/welcome_bg.png");
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  background-position: center calc(30px + env(safe-area-inset-top, 0px));
-  height: calc(132px + env(safe-area-inset-top, 0px));
+/* ----- seamless government hero: emblems → skyline → navy as one image ----- */
+.home-hero { padding: 0 !important; background: #0e2a52; }
+.hero-photo { position: relative; background: #b9bfe4; padding-top: calc(32px + env(safe-area-inset-top, 0px)); font-size: 0; }
+.hero-img { display: block; width: 100%; height: auto; }
+.hero-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 66%;
+  background: linear-gradient(180deg, rgba(14,42,82,0) 0%, rgba(14,42,82,.5) 42%, rgba(14,42,82,.9) 72%, #0e2a52 100%);
 }
-/* hero now sits below the gov bar — show the skyline, not the (already-shown) emblems */
-.home-hero { padding: 20px 22px 52px !important; }
-.home-hero .hero-bg img { object-position: center 72% !important; }
-.home-hero .hh-top { margin-bottom: 20px; }
+.home-hero .hero-content { position: relative; z-index: 2; margin-top: -24%; padding: 0 22px 18px; }
+.home-hero .hero-content .hh-top { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
