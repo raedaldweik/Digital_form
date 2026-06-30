@@ -332,30 +332,27 @@ body {
 .screen-welcome { background: #0a1c38; }
 .welcome-coded {
   position: relative; width: 100%; min-height: 100vh;
-  display: flex; flex-direction: column;
   color: #fff; overflow: hidden;
   background: #0a1c38;
 }
-/* vibrant official skyline + emblems, full-bleed across the top */
+/* vibrant official skyline + emblems as a real image, full-bleed across the top.
+   the sky strip above the emblems clears the dynamic island. */
 .wc-photo {
-  position: absolute; top: 0; left: 0; right: 0; height: 72%; z-index: 0;
-  background: url("assets/welcome_bg.png") no-repeat;
-  /* push the baked-in emblems down so they clear the dynamic island,
-     and fill the exposed strip with the photo's own sky colour */
-  background-size: 100% auto;
-  background-position: center calc(46px + env(safe-area-inset-top, 0px));
-  background-color: #b8bee5;
+  position: relative; font-size: 0;
+  background: #b8bee5;
+  padding-top: calc(40px + env(safe-area-inset-top, 0px));
 }
-/* fade the photo into the deep-navy content area below */
-.wc-photo::after {
-  content: ""; position: absolute; inset: 0;
+.wc-img { display: block; width: 100%; height: auto; }
+/* fade the LOWER part of the photo into the exact navy of the body — no seam */
+.wc-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 62%;
   background: linear-gradient(180deg,
-    rgba(10,28,56,0) 0%, rgba(10,28,56,0) 42%,
-    rgba(10,28,56,.55) 66%, rgba(10,28,56,.92) 86%, #0a1c38 100%);
+    rgba(10,28,56,0) 0%, rgba(10,28,56,.45) 46%,
+    rgba(10,28,56,.86) 74%, #0a1c38 100%);
 }
 
 .wc-body {
-  position: relative; z-index: 1; margin-top: auto;
+  position: relative; z-index: 2; margin-top: -27%;
   padding: 0 24px calc(26px + env(safe-area-inset-bottom, 0px));
   text-align: center;
 }
