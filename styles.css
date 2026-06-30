@@ -328,50 +328,63 @@ body {
    NEW COMPONENTS — coded Arabic welcome, document uploader, wakala
    ===================================================================== */
 
-/* ----- coded welcome screen ----- */
-.screen-welcome { background: #0c1c36; }
+/* ----- coded welcome screen (full-bleed dusk photo + Arabic content) ----- */
+.screen-welcome { background: #0a1c38; }
 .welcome-coded {
   position: relative; width: 100%; min-height: 100vh;
-  display: flex; flex-direction: column; gap: 18px;
-  padding: calc(54px + env(safe-area-inset-top, 0px)) 22px 30px;
-  color: #fff; overflow-y: auto;
-  background:
-    radial-gradient(120% 90% at 50% -20%, #1b3f73 0%, #102a4f 45%, #0a1c38 100%);
+  display: flex; flex-direction: column;
+  color: #fff; overflow: hidden;
+  background: #0a1c38;
 }
-.welcome-coded::before {
-  content: ""; position: absolute; inset: 0; z-index: 0;
-  background: url("assets/welcome_bg.png") center top / cover no-repeat;
-  opacity: .18; pointer-events: none;
+/* vibrant official skyline + emblems, full-bleed across the top */
+.wc-photo {
+  position: absolute; top: 0; left: 0; right: 0; height: 70%; z-index: 0;
+  background: url("assets/welcome_bg.png") center top / 100% auto no-repeat;
 }
-.welcome-coded > * { position: relative; z-index: 1; }
-
-.lang-pill {
-  align-self: flex-start;
-  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
-  color: #fff; border-radius: 999px; padding: 8px 18px; font-family: inherit;
-  font-size: 13px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px);
+/* fade the photo into the deep-navy content area below */
+.wc-photo::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(10,28,56,0) 0%, rgba(10,28,56,0) 42%,
+    rgba(10,28,56,.55) 66%, rgba(10,28,56,.92) 86%, #0a1c38 100%);
 }
-.lang-pill:active { background: rgba(255,255,255,.2); }
 
-.wc-emblems { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 4px; }
-.wc-emblem { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-.wc-emblem img { height: 46px; width: auto; filter: drop-shadow(0 3px 8px rgba(0,0,0,.4)); }
-.wc-emblem span { font-size: 11px; font-weight: 700; opacity: .92; max-width: 110px; line-height: 1.3; }
-.wc-sep { width: 1px; height: 48px; background: rgba(255,255,255,.25); }
+.wc-body {
+  position: relative; z-index: 1; margin-top: auto;
+  padding: 0 24px calc(26px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+.wc-title { font-size: 27px; font-weight: 800; line-height: 1.4; margin: 0 0 6px; text-shadow: 0 2px 14px rgba(0,0,0,.4); }
+.wc-title-en { font-size: 14px; letter-spacing: .3px; color: #7fd0a3; font-weight: 700; margin: 0; }
 
-.wc-hero { margin-top: 8px; text-align: center; }
-.wc-title { font-size: 26px; font-weight: 800; line-height: 1.35; margin: 0 0 6px; }
-.wc-title-en { font-size: 13px; letter-spacing: .4px; color: #8fc7a6; font-weight: 700; margin: 0 0 14px; }
-.wc-sub { font-size: 14px; line-height: 1.6; opacity: .9; margin: 0 auto 22px; max-width: 340px; }
-.wc-cta { font-size: 17px; }
+.wc-divider { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 16px 0; }
+.wc-divider::before, .wc-divider::after { content: ""; height: 1px; width: 64px; background: linear-gradient(90deg, transparent, rgba(127,208,163,.6)); }
+.wc-divider::before { background: linear-gradient(90deg, rgba(127,208,163,.6), transparent); }
+.wc-shield { color: #2fae6a; display: grid; place-items: center; }
+
+.wc-sub { font-size: 14px; line-height: 1.65; color: #cdd8e6; margin: 0 auto 20px; max-width: 330px; }
+.wc-cta { font-size: 17px; padding: 18px 22px; }
+
+.wc-langs {
+  display: inline-flex; align-items: center; gap: 4px; margin: 16px auto 18px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px; padding: 6px 10px; backdrop-filter: blur(8px);
+}
+.wc-globe { display: grid; place-items: center; color: #cdd8e6; padding: 0 4px; }
+.wc-langs .wlang {
+  background: transparent; border: none; cursor: pointer; font-family: inherit;
+  color: #cdd8e6; font-size: 13.5px; font-weight: 700; padding: 6px 14px; border-radius: 999px;
+}
+.wc-langs .wlang.is-active { background: #fff; color: #0a1c38; }
+.wlang-div { width: 1px; height: 16px; background: rgba(255,255,255,.25); }
 
 .wc-feats {
-  margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
-  border-radius: 18px; padding: 16px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 8px;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px; padding: 16px 10px;
 }
-.wc-feat { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
-.wc-feat .wf-ic { font-size: 18px; }
+.wc-feat { display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; font-size: 11.5px; font-weight: 700; line-height: 1.3; padding: 6px 4px; }
+.wc-feat .wf-ic { color: #2fae6a; display: grid; place-items: center; }
 
 /* ----- document uploader / OCR ----- */
 .uploader {

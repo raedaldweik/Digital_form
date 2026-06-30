@@ -17,35 +17,36 @@
     <!-- ============ WELCOME (coded, Arabic) ============ -->
     <section class="screen screen-welcome is-active" id="screen-welcome">
       <div class="welcome-coded">
-        <button class="lang-pill" id="lang-toggle"><span data-i18n="lang.toggle">English</span></button>
+        <div class="wc-photo"></div>
 
-        <div class="wc-emblems">
-          <div class="wc-emblem">
-            <img src="assets/logo_emblem.png" alt="" />
-            <span data-i18n="emblem.state">دولة الكويت</span>
-          </div>
-          <span class="wc-sep"></span>
-          <div class="wc-emblem">
-            <img src="assets/logo_brand.png" alt="" />
-            <span data-i18n="emblem.interior">الإدارة العامة للجمارك</span>
-          </div>
-        </div>
-
-        <div class="wc-hero">
+        <div class="wc-body">
           <h1 class="wc-title" data-i18n="welcome.title">منصة التصريح الذكي للمنافذ الحدودية</h1>
           <p class="wc-title-en" data-i18n="welcome.titleEn">Kuwait Smart Border Declaration</p>
+
+          <div class="wc-divider">
+            <span class="wc-shield"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3.1 7.8-7 9-3.9-1.2-7-4.4-7-9V6z"/></svg></span>
+          </div>
+
           <p class="wc-sub" data-i18n="welcome.sub">صرّح بمعلوماتك ومركبتك قبل الوصول إلى الجمارك الكويتية وأكمل إجراءاتك بسهولة.</p>
+
           <button class="btn btn-green btn-block wc-cta" data-goto="screen-step1">
             <span data-i18n="welcome.continue">ابدأ التصريح</span>
             <span class="btn-arrow"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
           </button>
-        </div>
 
-        <div class="wc-feats">
-          <div class="wc-feat"><span class="wf-ic">⚡</span><span data-i18n="feat.crossing">عبور أسرع للحدود</span></div>
-          <div class="wc-feat"><span class="wf-ic">🛡️</span><span data-i18n="feat.secure">خدمة حكومية آمنة</span></div>
-          <div class="wc-feat"><span class="wf-ic">📄</span><span data-i18n="feat.ai">تعبئة تلقائية للمستندات</span></div>
-          <div class="wc-feat"><span class="wf-ic">⏱️</span><span data-i18n="feat.realtime">مراجعة فورية</span></div>
+          <div class="wc-langs" role="group" aria-label="Language">
+            <span class="wc-globe"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg></span>
+            <button class="wlang is-active" data-setlang="ar">العربية</button>
+            <span class="wlang-div"></span>
+            <button class="wlang" data-setlang="en">English</button>
+          </div>
+
+          <div class="wc-feats">
+            <div class="wc-feat"><span class="wf-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M9 2h6"/></svg></span><span data-i18n="feat.crossing">عبور أسرع للحدود</span></div>
+            <div class="wc-feat"><span class="wf-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3.1 7.8-7 9-3.9-1.2-7-4.4-7-9V6z"/><circle cx="12" cy="11" r="1.6"/><path d="M12 12.6V15"/></svg></span><span data-i18n="feat.secure">خدمة حكومية آمنة</span></div>
+            <div class="wc-feat"><span class="wf-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><span data-i18n="feat.ai">تعبئة تلقائية للمستندات</span></div>
+            <div class="wc-feat"><span class="wf-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2.5"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4M9 14l2 2 4-4"/></svg></span><span data-i18n="feat.realtime">مراجعة فورية</span></div>
+          </div>
         </div>
       </div>
     </section>

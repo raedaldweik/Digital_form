@@ -23,16 +23,18 @@
     document.querySelectorAll("[data-i18n-ph]").forEach(function (el) {
       el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph")));
     });
-  }
-
-  /* language toggle (welcome pill) */
-  var langBtn = document.getElementById("lang-toggle");
-  if (langBtn) {
-    langBtn.addEventListener("click", function () {
-      lang = lang === "ar" ? "en" : "ar";
-      applyLang();
+    document.querySelectorAll(".wlang[data-setlang]").forEach(function (b) {
+      b.classList.toggle("is-active", b.getAttribute("data-setlang") === lang);
     });
   }
+
+  /* language pill (welcome) — explicit العربية / English */
+  document.addEventListener("click", function (e) {
+    var lb = e.target.closest("[data-setlang]");
+    if (!lb) return;
+    lang = lb.getAttribute("data-setlang");
+    applyLang();
+  });
 
   /* ---------- navigation ---------- */
   function show(id) {
